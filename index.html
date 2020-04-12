@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Chromatone lab</title>
+  <link href="css/styles.css" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <script src="js/assets/vue.js"></script>
+  <script src="js/assets/Tone14.js"></script>
+  <script src="js/assets/color-hash.js"></script>
+  <script src="js/assets/Sortable.min.js"></script>
+  <script src="js/assets/vuedraggable.umd.min.js"></script>
+  <!-- https://github.com/SortableJS/Vue.Draggable -->
+</head>
+
+<body>
+
+  <div id="lab-app">
+    <header class="row">
+      <img height="22px" src="images/ct-logo.svg" />
+    </header>
+    <main>
+        <draggable v-model="activeModules" handle=".handle">
+          <transition-group type="transition" name="flip-list">
+              <container :style="{backgroundColor:colorHash.hex(mod.id)}"
+              v-for="mod in activeModules"
+              :key="mod.id"
+              :title="mod.title"
+              @close="remove(mod)">
+              <component
+                :is="mod.name"
+                :id="mod.id"
+                >
+              </component>
+            </container>
+          </transition-group>
+        </draggable>
+
+        <section class="row">
+          <h3>Add</h3>
+          <button @click="add(mod)" v-for="mod in modules">
+            {{mod.title}}
+          </button>
+        </section>
+    </main>
+  </div>
+
+  <script type="module" src="js/lab.js">
+  </script>
+
+</body>
+
+</html>
