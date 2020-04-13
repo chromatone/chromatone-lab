@@ -2,6 +2,7 @@ import sqnob from '../ui/sqnob.js'
 
 export const autoFilter = {
   title:'Auto filter',
+  id:'auto-filter',
   name:'auto-filter',
   components:{
     sqnob

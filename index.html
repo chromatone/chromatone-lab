@@ -18,42 +18,17 @@
 
 <body>
 
-  <div id="lab-app">
+  <section id="lab-app">
     <header class="row">
       <img height="22px" src="images/ct-logo.svg" />
     </header>
     <main>
-        <draggable v-model="activeChannels" handle=".handle">
-          <transition-group type="transition" name="flip-list">
-              <channel
-               :style="{backgroundColor:colorHash.hex(ch.id)}"
-                v-for="ch in activeChannels"
-                :key="ch.id"
-                :title="ch.title"
-                @close="remove(ch)"
-                v-slot="chParams">
-                <transition name="fade">
-                  <component
-                    v-show="chParams.show"
-                    :is="ch.name"
-                    :id="ch.id"
-                    >
-                  </component>
-                </transition>
-            </channel>
-          </transition-group>
-        </draggable>
-
-        <section class="row">
-          <h3>Add</h3>
-          <button @click="add(ch)" v-for="ch in channels">
-            {{ch.title}}
-          </button>
-        </section>
+      <channels type="synths"></channels>
+      <channels type="filters"></channels>
     </main>
-  </div>
+  </section>
 
-  <script type="module" src="js/lab.js">
+  <script type="module" src="js/app.js">
   </script>
 
 </body>

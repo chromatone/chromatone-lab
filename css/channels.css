@@ -1,0 +1,20 @@
+.channels {
+  margin:8px;
+  padding:8px;
+  border-radius: 4px;
+}
+
+.channels header h2 {
+  font-size:14px;
+  font-weight: normal;
+  margin: 4px;
+}
+
+.channels header {
+  display:flex;
+  align-items: center;
+}
+
+.channels button {
+  padding:2px 4px;
+}

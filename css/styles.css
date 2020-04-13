@@ -2,10 +2,7 @@
 @import url('buttons.css');
 @import url('channel.css');
 @import url('transitions.css');
-
-:root {
-  --button-radius:4px;
-}
+@import url('channels.css');
 
 html,
 body {
@@ -15,11 +12,19 @@ body {
   font-family: sans-serif;
 }
 
+main {
+  display:flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+}
+
+main section {
+  flex: 1 1 350px;
+}
+
 .row {
   padding: 8px;
   display: flex;
   flex-flow: row wrap;
   align-items: center;
 }
-
-/* Base layout */

@@ -1,18 +1,17 @@
 export default {
-  title:'Container',
+  title:'Channel',
   props:['id','title'],
   template: `
-  <div class="container">
+  <div class="channel">
     <div class="head">
-      <span class="handle">&#9776;<h3>{{bigTitle}}</h3></span>
-      <div class="" @click="$emit('close')">&times;</div>
-      <div class="minimize" :class="{open:show}" @click="show=!show">&#x21F2;</div>
+      <span class="handle">&#9776;<h3  @click="show=!show">{{bigTitle}}</h3></span>
+      <div class="spacer"></div>
+      <div class="close" @click="$emit('close')">&times;</div>
     </div>
     <div>
       <slot :show="show"></slot>
     </div>
   </div>
-
   `,
   computed: {
     bigTitle() {
@@ -22,7 +21,6 @@ export default {
   data() {
     return {
       show:true,
-      channel:{},
     };
   },
   methods: {

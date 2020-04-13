@@ -23,6 +23,7 @@
 }
 
 button {
+  text-transform:uppercase;
   scroll-snap-align: start end;
   cursor:pointer;
   padding:8px;
