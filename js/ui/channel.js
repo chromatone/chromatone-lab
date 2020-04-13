@@ -5,10 +5,11 @@ export default {
   <div class="container">
     <div class="head">
       <span class="handle">&#9776;<h3>{{bigTitle}}</h3></span>
-      <div class="close" @click="$emit('close')">&times;</div>
+      <div class="" @click="$emit('close')">&times;</div>
+      <div class="close" @click="show=!show">&#x21F2;</div>
     </div>
     <div>
-      <slot></slot>
+      <slot :show="show"></slot>
     </div>
   </div>
 
@@ -20,13 +21,15 @@ export default {
   },
   data() {
     return {
+      show:true,
+      channel:{},
     };
   },
   methods: {
 
   },
-  watch: {
-
+  created() {
+    this.channel = new Tone.Channel().toDestination();
   },
   beforeDestroy() {
 
