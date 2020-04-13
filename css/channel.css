@@ -23,11 +23,15 @@
   cursor:grabbing;
 }
 
-.container .close {
+.container .minimize {
   cursor:pointer;
   position:absolute;
   right:8px;
-  width:26px;
+  transition: transform 300ms;
+}
+
+.container .open {
+  transform: rotate(180deg);
 }
 
 .handle h3 {
