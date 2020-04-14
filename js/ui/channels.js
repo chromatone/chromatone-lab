@@ -25,12 +25,12 @@ export default {
         </button>
       </header>
 
-      <draggable class="channels-container" v-model="activeChannels" handle=".handle">
-        <transition-group>
+      <draggable class="container" v-model="activeChannels" handle=".handle">
+        <transition-group name="fade">
             <channel
              :style="{backgroundColor:$color.hex(ch.id)}"
               v-for="ch in activeChannels"
-              :key="ch.id"
+              :key="ch.id || ch.title"
               :title="ch.title"
               @close="remove(ch)"
               v-slot="chParams">

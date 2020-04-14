@@ -27,7 +27,7 @@ export default {
 
   },
   created() {
-    this.channel = new Tone.Channel().toDestination();
+    this.$bus.channels[this.id || this.title] = new Tone.Channel().toDestination();
   },
   beforeDestroy() {
 

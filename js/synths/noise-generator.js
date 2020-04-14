@@ -2,7 +2,6 @@ import sqnob from "../ui/sqnob.js"
 
 export const noiseGenerator = {
   title:'Noise',
-  id:'noise',
   name:'noise-generator',
   props:['id'],
   template: `
