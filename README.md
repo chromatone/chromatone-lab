@@ -1,10 +1,8 @@
-# A laboratory of noise synthesis
+# A laboratory of web audio modules to play
 
-A web-app to play with different types of noise sounds and their transformations
+A web-app to play with different types of sound sources and effects
 
 Based on [ToneJS](https://tonejs.github.io/)
-
-Soon will be compatible with [v14](https://tonejs.github.io/docs/14.5.44)
 
 ## Chromatone apps
 
@@ -16,7 +14,6 @@ Red is first visible frequency of light spectrum, that we can join in a wheel an
 We develop a toolset for anyone who wants to see music and hear colors by themselves. Essentially it's an artifical synesthesia development toolkit. And you can use it to learn and teach, explore and compose, memorize and visualize music and even convert pictures to melodies.
 
 [chromatone.center](https://chromatone.center)
-
 
 The project is non-commercial and is in early development state now. It requires a lot of coding, testing and debugging, and also some architectural thought. Chromatone apps are an effort to construct a really flexible, yet simple cross-platform audio-visual interactive component system, that can be used to build a big range of complex education and exploration tools by music and design enthusiasts.
 

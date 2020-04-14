@@ -1,12 +1,13 @@
 .channel {
   padding: 8px;
+  margin:4px 0;
   display: flex;
   flex-flow: row wrap;
   align-items: center;
   border-radius: 4px;
 }
 
-.channel .head {
+.channel header {
   padding: 0;
   width:100%;
   display: flex;

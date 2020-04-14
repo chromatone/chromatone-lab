@@ -7,7 +7,6 @@ export default {
     @touchstart.prevent="activate"
     @dblclick="reset()"
     class="sqnob">
-    <link rel="stylesheet" href="css/sqnob.css"></link>
     <div class="num">{{value | round}}</div>
     <div class="info">
       {{param}}
@@ -101,19 +100,21 @@ export default {
       document.removeEventListener("touchmove", this.dragHandler);
       document.removeEventListener("touchend", this.deactivate);
       this.active = false;
+    },
+    pressed(e) {
+        if (e.key == "Shift") this.shiftPressed = true;
+    },
+    unpressed(e) {
+      if (e.key == "Shift") this.shiftPressed = false;
     }
   },
   created() {
-    document.addEventListener("keydown", e => {
-      if (e.key == "Shift") this.shiftPressed = true;
-    });
-    document.addEventListener("keyup", e => {
-      if (e.key == "Shift") this.shiftPressed = false;
-    });
+    document.addEventListener("keydown", this.pressed);
+    document.addEventListener("keyup", this.unpressd);
   },
   beforeDestroy() {
-    document.removeEventListener('keydown')
-    document.removeEventListener('keyup')
+    document.removeEventListener('keydown', this.pressed)
+    document.removeEventListener('keyup', this.unpressed)
   }
 }
 

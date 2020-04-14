@@ -1,10 +1,10 @@
 import channel from './channel.js'
-import * as filters from '../filters/all.js'
-import * as synths from '../synths/all.js'
+import * as effects from '../effects/all.js'
+import * as sources from '../sources/all.js'
 
 const all = {
-  filters,
-  synths,
+  effects,
+  sources,
 }
 
 export default {
@@ -12,8 +12,8 @@ export default {
   props:['type'],
   components:{
     channel,
-    ...filters,
-    ...synths,
+    ...effects,
+    ...sources,
   },
   template: `
     <section class="channels" >
@@ -32,6 +32,7 @@ export default {
               v-for="ch in activeChannels"
               :key="ch.id"
               :id="ch.id"
+              :type="type"
               :title="ch.title"
               @close="remove(ch)"
               v-slot="chParams">

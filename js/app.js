@@ -1,4 +1,3 @@
-
 import channels from './ui/channels.js'
 import './bus.js'
 
@@ -9,7 +8,10 @@ const app = new Vue({
     channels,
   },
   data: {
-
+    sources:{},
+    effects:{},
+    senders:{},
+    receivers:{},
   },
   methods: {
 

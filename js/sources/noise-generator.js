@@ -5,7 +5,7 @@ export const noiseGenerator = {
   name:'noise-generator',
   props:['id'],
   template: `
-    <div id="noise-generator" class="row">
+    <div class="noise-generator row">
 
       <button :class="{'active': active}"
       @mousedown="playNoise()"
@@ -31,7 +31,6 @@ export const noiseGenerator = {
       </div>
 
       <sqnob v-model="volume" unit="" param="VOL" :step="0.01" :min="0" :max="1"></sqnob>
-      <sqnob v-model="gain.gain.value" unit="" param="DRY" :step="0.005" :min="0" :max="1"></sqnob>
 
     </div>
   `,
@@ -45,10 +44,10 @@ export const noiseGenerator = {
           type: "brown"
         },
         envelope: {
-          attack: 0.1,
+          attack: 1,
           decay: 0.1,
           sustain: 0.9,
-          release: 1
+          release: 4
         },
         volume: 0,
       },
@@ -56,15 +55,13 @@ export const noiseGenerator = {
       types: ["brown", "pink", "white"],
       active: false,
       synth: new Tone.NoiseSynth(),
-      gain: new Tone.Gain(),
       send: {},
     };
   },
   mounted() {
     this.synth.set(this.noiseOptions);
-    this.synth.connect(this.gain);
-    this.gain.toDestination();
-    console.log(this.$bus.channels)
+    this.synth.connect(this.$root.sources[this.id]);
+    this.synth.connect(this.$root.senders[this.id]);
   },
   filters: {
     trim(val) {

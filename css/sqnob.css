@@ -8,6 +8,9 @@
   font-size:1em;
   margin:4px;
   min-height:2em;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
 }
 
 .sqnob .info {
