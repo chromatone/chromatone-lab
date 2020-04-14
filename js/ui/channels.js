@@ -30,7 +30,8 @@ export default {
             <channel
              :style="{backgroundColor:$color.hex(ch.id)}"
               v-for="ch in activeChannels"
-              :key="ch.id || ch.title"
+              :key="ch.id"
+              :id="ch.id"
               :title="ch.title"
               @close="remove(ch)"
               v-slot="chParams">
@@ -56,7 +57,7 @@ export default {
         ch
       )
     }
-    this.activeChannels = Object.values(this.channels) //temporary for check
+//    this.activeChannels = Object.values(this.channels) //temporary for check
   },
   data() {
     return {

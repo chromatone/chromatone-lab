@@ -5,36 +5,35 @@ export const noiseGenerator = {
   name:'noise-generator',
   props:['id'],
   template: `
-  <div id="noise-generator" class="row">
+    <div id="noise-generator" class="row">
 
-    <button :class="{'active': active}"
-    @mousedown="playNoise()"
-    @touchstart.stop.prevent="playNoise()">
-        NOISE
-    </button>
-
-    <div class="button-group">
-      <span class="title">Noise type</span>
-      <button :class="{active:synth.noise.type==type}" @click="synth.noise.type=type" :key="type" v-for="type in types">
-      {{type}}
+      <button :class="{'active': active}"
+      @mousedown="playNoise()"
+      @touchstart.stop.prevent="playNoise()">
+          NOISE
       </button>
+
+      <div class="button-group">
+        <span class="title">Noise type</span>
+        <button :class="{active:synth.noise.type==type}" @click="synth.noise.type=type" :key="type" v-for="type in types">
+        {{type}}
+        </button>
+      </div>
+
+      <sqnob v-model="synth.noise.playbackRate" unit="" param="SPEED" :step="0.005" :min="0.1" :max="4"></sqnob>
+
+      <div class="button-group">
+        <span class="title">Envelope</span>
+        <sqnob v-model="synth.envelope.attack" unit="" param="ATT" :step="0.01" :min="0.005" :max="4"></sqnob>
+        <sqnob v-model="synth.envelope.decay" unit="" param="DEC" :step="0.01" :min="0.001" :max="6"></sqnob>
+        <sqnob v-model="synth.envelope.sustain" unit="" param="SUS" :step="0.01" :min="0.001" :max="1"></sqnob>
+        <sqnob v-model="synth.envelope.release" unit="" param="REL" :step="0.01" :min="0.001" :max="12"></sqnob>
+      </div>
+
+      <sqnob v-model="volume" unit="" param="VOL" :step="0.01" :min="0" :max="1"></sqnob>
+      <sqnob v-model="gain.gain.value" unit="" param="DRY" :step="0.005" :min="0" :max="1"></sqnob>
+
     </div>
-
-    <sqnob v-model="synth.noise.playbackRate" unit="" param="SPEED" :step="0.005" :min="0.1" :max="4"></sqnob>
-
-    <div class="button-group">
-      <span class="title">Envelope</span>
-      <sqnob v-model="synth.envelope.attack" unit="" param="ATT" :step="0.01" :min="0.005" :max="4"></sqnob>
-      <sqnob v-model="synth.envelope.decay" unit="" param="DEC" :step="0.01" :min="0.001" :max="6"></sqnob>
-      <sqnob v-model="synth.envelope.sustain" unit="" param="SUS" :step="0.01" :min="0.001" :max="1"></sqnob>
-      <sqnob v-model="synth.envelope.release" unit="" param="REL" :step="0.01" :min="0.001" :max="12"></sqnob>
-    </div>
-
-    <sqnob v-model="volume" unit="" param="VOL" :step="0.01" :min="0" :max="1"></sqnob>
-    <sqnob v-model="gain.gain.value" unit="" param="DRY" :step="0.005" :min="0" :max="1"></sqnob>
-
-</div>
-
   `,
   components: {
     sqnob
@@ -57,14 +56,15 @@ export const noiseGenerator = {
       types: ["brown", "pink", "white"],
       active: false,
       synth: new Tone.NoiseSynth(),
-      gain: new Tone.Gain().toMaster(),
+      gain: new Tone.Gain(),
       send: {},
     };
   },
   mounted() {
-    this.send = this.synth.send("filter");
     this.synth.set(this.noiseOptions);
     this.synth.connect(this.gain);
+    this.gain.toDestination();
+    console.log(this.$bus.channels)
   },
   filters: {
     trim(val) {
@@ -74,7 +74,7 @@ export const noiseGenerator = {
   },
   methods: {
     playNoise() {
-      this.$root.resume();
+      this.$resume();
       if (this.active) {this.stopNoise(); return}
       this.active = true;
       this.synth.triggerAttack();
@@ -87,13 +87,6 @@ export const noiseGenerator = {
   watch: {
     volume(val) {
       this.synth.volume.value=Tone.gainToDb(val);
-    },
-    active(val) {
-      if (val) {
-        this.synth.triggerAttack();
-      } else {
-        this.synth.triggerRelease();
-      }
     },
     "noiseOptions.volume"(val) {
       this.synth.volume.setValueAtTime(val);
