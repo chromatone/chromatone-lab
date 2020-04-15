@@ -1,45 +1,19 @@
 import knob from "../ui/knob.js"
+import choice from '../ui/choice.js'
+import toggle from '../ui/toggle.js'
 
 export const noiseGenerator = {
   title:'Noise',
   name:'noise-generator',
-  props:['id','ch'],
-  template: `
-    <div class="noise-generator row">
-
-      <button :class="{'active': active}"
-      @mousedown="playNoise()"
-      @touchstart.stop.prevent="playNoise()">
-          NOISE
-      </button>
-
-      <div class="button-group">
-        <span class="title">Noise type</span>
-        <button :class="{active:synth.noise.type==type}" @click="synth.noise.type=type" :key="type" v-for="type in types">
-        {{type}}
-        </button>
-      </div>
-
-      <knob v-model="synth.noise.playbackRate" unit="" param="SPEED" :step="0.005" :min="0.1" :max="4"></knob>
-
-      <div class="button-group">
-        <span class="title">Envelope</span>
-        <knob v-model="synth.envelope.attack" unit="" param="ATT" :step="0.01" :min="0.005" :max="4"></knob>
-        <knob v-model="synth.envelope.decay" unit="" param="DEC" :step="0.01" :min="0.001" :max="6"></knob>
-        <knob v-model="synth.envelope.sustain" unit="" param="SUS" :step="0.01" :min="0.001" :max="1"></knob>
-        <knob v-model="synth.envelope.release" unit="" param="REL" :step="0.01" :min="0.001" :max="12"></knob>
-      </div>
-
-      <knob v-model="volume" unit="" param="VOL" :step="0.01" :min="0" :max="1"></knob>
-
-    </div>
-  `,
   components: {
-    knob
+    knob,
+    choice,
+    toggle,
   },
+  props:['id','ch'],
   data() {
     return {
-      noiseOptions: {
+      options: {
         noise: {
           type: "brown"
         },
@@ -49,41 +23,58 @@ export const noiseGenerator = {
           sustain: 0.9,
           release: 4
         },
-        volume: 0,
+        volume: 1,
       },
-      volume:1,
-      types: ["brown", "pink", "white"],
+      types: {
+        brown: 'brown',
+        pink: 'pink',
+        white: 'white'
+      },
       active: false,
       synth: new Tone.NoiseSynth(),
       send: {},
-    };
+    }
   },
+  template: `
+    <div class="noise-generator row">
+
+      <toggle v-model="active">Noise</toggle>
+
+      <choice v-model="synth.noise.type" :options="types">Noise type</choice>
+
+      <knob v-model="synth.noise.playbackRate" unit="" :step="0.005" :min="0.1" :max="4">speed</knob>
+
+      <div class="button-group">
+        <span class="title">Envelope</span>
+        <knob v-model="synth.envelope.attack"
+          :min="0.005" :max="4">A</knob>
+        <knob v-model="synth.envelope.decay"
+          :min="0.001" :max="6">D</knob>
+        <knob v-model="synth.envelope.sustain"
+          :min="0.001" :max="1">S</knob>
+        <knob v-model="synth.envelope.release"
+          :min="0.001" :max="50">R</knob>
+      </div>
+
+    </div>
+  `,
   mounted() {
-    this.synth.set(this.noiseOptions);
+    this.synth.set(this.options);
     this.synth.connect(this.ch.channel);
     this.synth.connect(this.ch.sender);
   },
-  methods: {
-    playNoise() {
-      this.$resume();
-      if (this.active) {this.stopNoise(); return}
-      this.active = true;
-      this.synth.triggerAttack();
-    },
-    stopNoise() {
-      this.synth.triggerRelease();
-      this.active = false;
-    }
-  },
   watch: {
-    volume(val) {
-      this.synth.volume.value=Tone.gainToDb(val);
+    active(val) {
+      if (val) {
+        this.$resume();
+        this.synth.triggerAttack();
+      } else {
+        this.synth.triggerRelease();
+      }
     },
-    "noiseOptions.volume"(val) {
-      this.synth.volume.setValueAtTime(val);
-    }
   },
   beforeDestroy() {
     this.synth.triggerRelease();
+    this.synth.dispose();
   }
 };

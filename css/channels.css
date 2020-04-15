@@ -15,10 +15,6 @@
   align-items: center;
 }
 
-.channels button {
-  padding:2px 4px;
-}
-
 .channels .container {
   max-height:70vh;
   overflow-y:scroll;

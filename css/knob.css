@@ -14,8 +14,9 @@
 }
 
 .knob .info {
+  text-transform: uppercase;
   user-select: none;
-  padding: 4px;
+  padding: 6px;
   font-size: 10px;
   font-weight: bold;
   text-align: center;

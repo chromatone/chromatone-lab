@@ -6,9 +6,6 @@ export const mic = {
   props:['id','ch'],
   template: `
     <div class="audio-in row">
-      <button v-if="error"
-      @click="openMic()"
-      >OPEN</button>
       <button v-if="open" :class="{'active': active}"
       @mousedown="active=!active"
       @touchstart.stop.prevent="active=!active"
@@ -38,6 +35,7 @@ export const mic = {
   },
   methods: {
     openMic() {
+      this.$resume;
       this.mic.open().then(() => {
         this.open = true;
       }).catch((e) => {this.error = e.message})

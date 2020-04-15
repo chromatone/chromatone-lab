@@ -1,5 +1,28 @@
 
 export default {
+  props: {
+    min:{
+      type: Number,
+      default:0,
+    },
+    max:{
+      type: Number,
+      default:1,
+    },
+    value:{
+      type: Number,
+      default:1,
+    },
+    step:{
+      type: Number,
+      default:0.01,
+    },
+    value:{
+      type: Number,
+      default:'',
+    },
+    color:String,
+  },
   template: `
   <div
     :class="{active:active}"
@@ -9,12 +32,11 @@ export default {
     class="knob">
     <div class="num">{{value | round}}</div>
     <div class="info">
-      {{param}}
+      <slot></slot>
     </div>
     <div class="value" :style="{height:internalValue+'%', backgroundColor:color}"></div>
   </div>
   `,
-  props: ["max", "min", "value", "step", "param","unit","log","color"],
   data() {
     return {
       internalValue: this.mapInput(this.value),

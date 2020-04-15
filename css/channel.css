@@ -6,18 +6,26 @@
   align-items: center;
   border-radius: 4px;
 }
+.channel header {
+    flex:1 1 100%;
+}
+
+.channel footer {
+  flex: 1 1;
+}
 
 .channel header, .channel footer {
   padding: 0;
-  width:100%;
   display: flex;
   flex-flow: row wrap;
   align-items: center;
 }
 
 .channel .module {
+  flex:2 1;
   border:1px #aaa solid;
   border-radius:4px;
+  background-color: hsla(0,0%,100%,0.4);
 }
 
 .channel .handle {
