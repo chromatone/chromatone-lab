@@ -1,4 +1,4 @@
-.sqnob {
+.knob {
   scroll-snap-align: start end;
   position:relative;
   cursor: pointer;
@@ -13,7 +13,7 @@
   align-items: center;
 }
 
-.sqnob .info {
+.knob .info {
   user-select: none;
   padding: 4px;
   font-size: 10px;
@@ -23,7 +23,7 @@
   position: relative;
 }
 
-.sqnob .value {
+.knob .value {
   background-color: hsla(0,0%,95%,1);
   z-index:2;
   position: absolute;
@@ -33,12 +33,12 @@
   border-top:1px solid #444;
 }
 
-.sqnob.active .num {
+.knob.active .num {
   opacity:1;
   display:block;
 }
 
-.sqnob .num {
+.knob .num {
   opacity:0;
   display:none;
   position:absolute;

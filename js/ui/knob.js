@@ -6,15 +6,15 @@ export default {
     @mousedown.prevent="mouseDown"
     @touchstart.prevent="activate"
     @dblclick="reset()"
-    class="sqnob">
+    class="knob">
     <div class="num">{{value | round}}</div>
     <div class="info">
       {{param}}
     </div>
-    <div class="value" :style="{height:internalValue+'%'}"></div>
+    <div class="value" :style="{height:internalValue+'%', backgroundColor:color}"></div>
   </div>
   `,
-  props: ["max", "min", "value", "step", "param","unit","log"],
+  props: ["max", "min", "value", "step", "param","unit","log","color"],
   data() {
     return {
       internalValue: this.mapInput(this.value),
@@ -29,7 +29,7 @@ export default {
     };
   },
   watch: {
-    value: function(newVal) {
+    value(newVal) {
       this.internalValue = this.mapInput(newVal)
     }
   },
@@ -70,7 +70,8 @@ export default {
       return mapNumber(value, this.min, this.max, 0, 100, this.step)
     },
     mapOutput(value) {
-      return mapNumber(value, 0, 100, this.min, this.max, this.step)
+      let output = mapNumber(value, 0, 100, this.min, this.max, this.step);
+      return output
     },
     activate(ev) {
       this.activeTouch = ev.changedTouches[0].identifier
