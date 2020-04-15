@@ -15,8 +15,8 @@ export default {
       receiver: {},
       sends:{},
       sendEnabled:false,
-      receive:1,
-      sendVolume:1,
+      receiveLevel:1,
+      sendLevel:1,
     };
   },
   template: `
@@ -27,16 +27,15 @@ export default {
         &#9776;
         <h3  @click="show=!show">{{title.toUpperCase()}}</h3>
       </span>
-      <knob v-if="group=='effects'" v-model="receive" unit="" param="RECEIVE" :step="0.01" :min="0" :max="1"></knob>
-      <knob v-model="volume" unit="" param="DRY" :step="0.01" :min="0" :max="1"></knob>
-      <knob v-model="channel.pan.value" unit="" param="PAN" :step="0.01" :min="-1" :max="1"></knob>
+      <knob v-if="group=='effects'" v-model="receiveLevel">RECEIVE</knob>
+      <knob v-model="volume">VOL</knob>
+      <knob v-model="channel.pan.value" :min="-1" >PAN</knob>
       <button
         v-if="!sendEnabled"
         @click="sendEnabled=true">
         SEND
       </button>
       <div class="spacer"></div>
-
       <div class="close" @click="$emit('close')">
         &times;
       </div>
@@ -45,17 +44,17 @@ export default {
     <section class="module">
       <slot :show="show" :ch="{channel,sender,receiver}"></slot>
     </section>
-    
+
     <footer v-if="sendEnabled">
 
-      <knob v-model="sendVolume" unit="" param="SEND" :step="0.01" :min="0" :max="1"></knob>
+      <knob v-model="sendLevel">SEND</knob>
 
       TO
 
       <knob
         v-for="(send, key) in sends" :key="key"
         :color="$color.hex(key)"
-        v-model="send._gainNode.gain.value" :param="send.title.toUpperCase()" :step="0.01" :min="0" :max="1"></knob>
+        v-model="send._gainNode.gain.value" :step="0.01" :min="0" :max="1">{{send.title}}</knob>
 
       <button
         v-for="effect in $root.ch.receivers"
@@ -77,23 +76,26 @@ export default {
       this.receiver = this.createChannel('receivers');
       this.receiver.receive(this.id);
     }
-
+    this.$root.$on('unreceive', this.delSend)
   },
   watch: {
-    receive(val) {
-      this.receiver.volume.value=Tone.gainToDb(val)
+    receiveLevel(val) {
+      this.setVolume('receiver', val)
     },
     volume(val) {
-      this.channel.volume.value = Tone.gainToDb(val)
+      this.setVolume('channel', val)
     },
-    sendVolume(val) {
-      this.sender.volume.value = Tone.gainToDb(val)
+    sendLevel(val) {
+      this.setVolume('sender', val)
     },
-  },
-  computed: {
-
   },
   methods: {
+    delSend(id) {
+      this.$delete(this.sends,id)
+    },
+    setVolume(channel, val) {
+      this[channel].volume.value = Tone.gainToDb(val)
+    },
     createChannel(group) {
       let channel = new Tone.Channel();
       channel.id = this.id;
@@ -124,6 +126,7 @@ export default {
     if (this.receiver.dispose) {
       this.receiver.dispose()
       this.$delete(this.$root.ch.receivers,this.id)
+      this.$root.$emit('unreceive',this.id)
     }
   }
 };
