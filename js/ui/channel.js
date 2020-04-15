@@ -35,6 +35,11 @@ export default {
         @click="sendEnabled=true">
         SEND
       </button>
+      <knob v-model="sendLevel" v-if="sendEnabled">SEND</knob>
+      <knob v-if="sendEnabled"
+        v-for="(send, key) in sends" :key="key"
+        :color="$color.hex(key)"
+        v-model="send._gainNode.gain.value" :step="0.01" :min="0" :max="1">{{send.title}}</knob>
       <div class="spacer"></div>
       <div class="close" @click="$emit('close')">
         &times;
@@ -45,19 +50,12 @@ export default {
       <slot :show="show" :ch="{channel,sender,receiver}"></slot>
     </section>
 
-    <footer v-if="sendEnabled">
+    <footer v-if="sendEnabled && receivers.length>0">
 
-      <knob v-model="sendLevel">SEND</knob>
-
-      TO
-
-      <knob
-        v-for="(send, key) in sends" :key="key"
-        :color="$color.hex(key)"
-        v-model="send._gainNode.gain.value" :step="0.01" :min="0" :max="1">{{send.title}}</knob>
+      <h3>SEND TO</h3>
 
       <button
-        v-for="effect in $root.ch.receivers"
+        v-for="effect in receivers"
         :style="{backgroundColor:$color.hex(effect.id)}"
         :key="effect.id"
         v-if="effect.id!=id && !sends[effect.id]"
@@ -77,6 +75,18 @@ export default {
       this.receiver.receive(this.id);
     }
     this.$root.$on('unreceive', this.delSend)
+  },
+  computed:{
+    receivers() {
+      let receivers = []
+      for (let i in this.$root.ch.receivers) {
+        let receiver = this.$root.ch.receivers[i]
+        if (receiver.id != this.id && !this.sends[receiver.id]) {
+          receivers.push(receiver)
+        }
+      }
+      return receivers
+    }
   },
   watch: {
     receiveLevel(val) {

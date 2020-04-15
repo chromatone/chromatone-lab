@@ -19,7 +19,7 @@ main {
   align-items: flex-start;
 }
 
-main section {
+main > section {
   flex: 1 1 350px;
 }
 
@@ -28,4 +28,8 @@ main section {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
+}
+
+.spacer {
+  flex-grow:100;
 }

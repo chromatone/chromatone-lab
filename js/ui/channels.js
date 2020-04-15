@@ -10,6 +10,17 @@ export default {
     ...effects,
     ...sources,
   },
+  data() {
+    return {
+      open:true,
+      channels:{},
+      allChannels:{
+        effects,
+        sources,
+      },
+      activeChannels:[],
+    };
+  },
   template: `
     <section class="channels" >
 
@@ -18,9 +29,10 @@ export default {
         <button @click="add(ch)" v-for="ch in channels">
           {{ch.title}}
         </button>
+        <div class="spacer"></div>
       </header>
 
-      <draggable class="container" v-model="activeChannels" handle=".handle">
+      <draggable class="container" v-if="activeChannels.length>0" v-model="activeChannels" handle=".handle">
         <transition-group name="fade">
             <channel
              :style="{backgroundColor:$color.hex(ch.id)}"
@@ -33,7 +45,7 @@ export default {
               v-slot="chParams">
               <transition name="fade">
                 <component
-                  v-show="chParams.show"
+                  v-show="open && chParams.show"
                   :ch="chParams.ch"
                   :is="ch.name"
                   :id="ch.id"
@@ -55,16 +67,6 @@ export default {
       )
     }
 //    this.activeChannels = Object.values(this.channels) //temporary for check
-  },
-  data() {
-    return {
-      channels:{},
-      allChannels:{
-        effects,
-        sources,
-      },
-      activeChannels:[],
-    };
   },
   methods: {
     add(mod) {

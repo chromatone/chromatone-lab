@@ -27,7 +27,7 @@ export const chorus = {
       <knob v-model="chorus.delayTime" :min="1" :max="5000">Time</knob>
       <knob v-model="chorus.depth">DEPTH</knob>
       <knob v-model="chorus.feedback.value">Feedback</knob>
-      <knob v-model="chorus.spread" :max="360">Spread</knob>
+      <knob v-model="chorus.spread" :step="1" :max="360">Spread</knob>
 
   </div>
   `,
