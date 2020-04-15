@@ -2,7 +2,7 @@ import sqnob from './sqnob.js'
 
 export default {
   title:'Channel',
-  props:['id','title','type'],
+  props:['id','title','group'],
   components: {
     sqnob
   },
@@ -12,6 +12,7 @@ export default {
       volume:1,
       channel:new Tone.Channel(),
       sender: new Tone.Channel(),
+      receiver: new Tone.Channel(),
       sends:{},
       sendVolume:1,
     };
@@ -35,16 +36,16 @@ export default {
     </header>
 
     <div>
-      <slot :show="show"></slot>
+      <slot :show="show" :ch="{channel,sender,receiver}"></slot>
     </div>
-    <footer :key="$root.updated">
+    <footer>
 
       <sqnob
         v-for="(send, key) in sends" :key="key"
         v-model="send._gainNode.gain.value" :param="key" :step="0.01" :min="0" :max="1"></sqnob>
 
       <button
-        v-for="effect in $root.receivers"
+        v-for="effect in $root.ch.receivers"
         :key="effect.id"
         v-if="effect.id!=id && !sends[effect.id]"
         @click="send(effect.id)">
@@ -56,22 +57,10 @@ export default {
   </div>
   `,
   created() {
-    this.channel.toDestination();
-    this.channel.type = this.type;
-    this.channel.id = this.id;
-    this.$set(
-      this.$root[this.type],
-      this.id,
-      this.channel
-    )
-
-    this.sender.id = this.id;
-    this.sender.type = this.type;
-    this.$set(
-      this.$root.senders,
-      this.id,
-      this.sender
-    )
+    this.channel = this.createChannel(this.group).toDestination();
+    this.sender = this.createChannel('senders');
+    this.receiver = this.createChannel('receivers');
+    this.receiver.receive(this.id);
   },
   watch: {
     volume(val) {
@@ -85,6 +74,17 @@ export default {
 
   },
   methods: {
+    createChannel(group) {
+      let channel = new Tone.Channel();
+      channel.id = this.id;
+      channel.group = this.group;
+      this.$set(
+        this.$root.ch[group],
+        this.id,
+        channel
+      )
+      return channel
+    },
     send(id) {
       let send = this.sender.send(id)
       this.$set(
@@ -92,11 +92,11 @@ export default {
         id,
         send
       )
-      console.log(send)
     }
   },
   beforeDestroy() {
     this.channel.dispose()
-    this.$delete(this.$root[this.type],this.id)
+    this.$delete(this.$root.ch[this.group],this.id)
+    this.$delete(this.$root.ch.senders,this.id)
   }
 };

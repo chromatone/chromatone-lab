@@ -56,18 +56,11 @@ export const autoFilter = {
   `,
   created() {
     this.filter.set(this.options);
-    this.filter.connect(this.$root.effects[this.id]);
+    this.filter.connect(this.$root.ch.effects[this.id]);
   },
   mounted() {
-    this.receiver.id = this.id;
-    this.receiver.type = 'Auto Filter';
+    this.receiver = this.$root.ch.receivers[this.id]
     this.receiver.connect(this.filter);
-    this.receiver.receive(this.id);
-    this.$set(
-      this.$root.receivers,
-      this.id,
-      this.receiver
-    )
   },
 	watch: {
     receive(val) {

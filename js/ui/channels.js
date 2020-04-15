@@ -2,14 +2,9 @@ import channel from './channel.js'
 import * as effects from '../effects/all.js'
 import * as sources from '../sources/all.js'
 
-const all = {
-  effects,
-  sources,
-}
-
 export default {
   title:'Channels',
-  props:['type'],
+  props:['group'],
   components:{
     channel,
     ...effects,
@@ -19,7 +14,7 @@ export default {
     <section class="channels" >
 
       <header>
-        <h2>{{type.toUpperCase()}}</h2>
+        <h2>{{group.toUpperCase()}}</h2>
         <button @click="add(ch)" v-for="ch in channels">
           + {{ch.title}}
         </button>
@@ -32,13 +27,14 @@ export default {
               v-for="ch in activeChannels"
               :key="ch.id"
               :id="ch.id"
-              :type="type"
+              :group="group"
               :title="ch.title"
               @close="remove(ch)"
               v-slot="chParams">
               <transition name="fade">
                 <component
                   v-show="chParams.show"
+                  :ch="chParams.ch"
                   :is="ch.name"
                   :id="ch.id"
                   >
@@ -50,8 +46,8 @@ export default {
     </section>
   `,
   created() {
-    for (let key in all[this.type]) {
-      let ch = all[this.type][key];
+    for (let key in this.allChannels[this.group]) {
+      let ch = this.allChannels[this.group][key];
       this.$set(
         this.channels,
         ch.name,
@@ -63,6 +59,10 @@ export default {
   data() {
     return {
       channels:{},
+      allChannels:{
+        effects,
+        sources,
+      },
       activeChannels:[],
     };
   },

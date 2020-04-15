@@ -3,7 +3,7 @@ import sqnob from "../ui/sqnob.js"
 export const noiseGenerator = {
   title:'Noise',
   name:'noise-generator',
-  props:['id'],
+  props:['id','ch'],
   template: `
     <div class="noise-generator row">
 
@@ -60,14 +60,8 @@ export const noiseGenerator = {
   },
   mounted() {
     this.synth.set(this.noiseOptions);
-    this.synth.connect(this.$root.sources[this.id]);
-    this.synth.connect(this.$root.senders[this.id]);
-  },
-  filters: {
-    trim(val) {
-      let short = val.slice(0, 3);
-      return short.toUpperCase();
-    }
+    this.synth.connect(this.ch.channel);
+    this.synth.connect(this.ch.sender);
   },
   methods: {
     playNoise() {
