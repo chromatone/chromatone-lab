@@ -1,19 +1,19 @@
-import sqnob from './sqnob.js'
+import knob from './knob.js'
 
 export const bitCrusher = {
   title:'Bit crusher',
   name:'bit-crusher',
   components:{
-    sqnob
+    knob
   },
   template: `
   <div id="bitCrusher" class="row">
 
       <button :class="{active:receive}"  @click="receive=!receive">BITCRUSHER</button>
 
-      <sqnob v-model="crusher.bits" unit="" param="BITS" :step="0.1" :min="0.1" :max="16"></sqnob>
+      <knob v-model="crusher.bits" unit="" param="BITS" :step="0.1" :min="0.1" :max="16"></knob>
 
-      <sqnob v-model="crusher.wet.value" unit="" param="WET" :step="0.05" :min="0" :max="1"></sqnob>
+      <knob v-model="crusher.wet.value" unit="" param="WET" :step="0.05" :min="0" :max="1"></knob>
 
 
   </div>

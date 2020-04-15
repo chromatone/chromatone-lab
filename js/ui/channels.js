@@ -16,7 +16,7 @@ export default {
       <header>
         <h2>{{group.toUpperCase()}}</h2>
         <button @click="add(ch)" v-for="ch in channels">
-          + {{ch.title}}
+          {{ch.title}}
         </button>
       </header>
 

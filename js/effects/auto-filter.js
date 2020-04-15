@@ -1,15 +1,14 @@
-import sqnob from '../ui/sqnob.js'
+import knob from '../ui/knob.js'
 
 export const autoFilter = {
   title:'Auto filter',
-  props: ['id'],
+  props: ['id','ch'],
   name:'auto-filter',
   components:{
-    sqnob
+    knob
   },
   data() {
     return {
-      receiver: new Tone.Channel(),
       filter: new Tone.AutoFilter(),
       types:[
         {type:'lowpass', name:'LP'},
@@ -34,12 +33,11 @@ export const autoFilter = {
   },
   template: `
       <div id="autoFilter" class="row">
-        <sqnob v-model="receive" unit="" param="RECEIVE" :step="0.01" :min="0" :max="1"></sqnob>
 
-        <sqnob v-model="filter.baseFrequency" unit="" param="FREQ" :step="1" :min="10" :max="1000"></sqnob>
-        <sqnob v-model="filter.octaves" unit="" param="OCT" :step="0.01" :min="0.1" :max="7"></sqnob>
-        <sqnob v-model="filter.filter.Q.value" unit="" param="Q" :step="0.01" :min="0" :max="10"></sqnob>
-        <sqnob v-model="filter.wet.value" unit="" param="WET" :step="0.01" :min="0" :max="1"></sqnob>
+        <knob v-model="filter.baseFrequency" unit="" param="FREQ" :step="1" :min="10" :max="1000"></knob>
+        <knob v-model="filter.octaves" unit="" param="OCT" :step="0.01" :min="0.1" :max="7"></knob>
+        <knob v-model="filter.filter.Q.value" unit="" param="Q" :step="0.01" :min="0" :max="10"></knob>
+        <knob v-model="filter.wet.value" unit="" param="WET" :step="0.01" :min="0" :max="1"></knob>
 
         <div class="button-group">
           <span class="title">Filter type</span>
@@ -47,33 +45,29 @@ export const autoFilter = {
             {{type.name}}
           </button>
         </div>
-            <button class="line-button" :class="{active:playing}" @click="playing=!playing">AUTO</button>
-            <sqnob v-model="filter.depth.value" unit="" param="DEP" :step="0.01" :min="0.1" :max="1"></sqnob>
+            <button class="line-button" :class="{active:playing}" @click="lfo()">LFO</button>
+            <knob v-model="filter.depth.value" unit="" param="DEP" :step="0.01" :min="0.1" :max="1"></knob>
 
-            <sqnob v-model="filter.frequency.value" unit="" param="RATE" :step="0.01" :min="0.1" :max="60"></sqnob>
+            <knob v-model="filter.frequency.value" unit="" param="RATE" :step="0.01" :min="0.1" :max="60"></knob>
 
     </div>
   `,
   created() {
     this.filter.set(this.options);
-    this.filter.connect(this.$root.ch.effects[this.id]);
+    this.filter.connect(this.ch.channel);
+    this.filter.connect(this.ch.sender);
+    this.ch.receiver.connect(this.filter);
   },
-  mounted() {
-    this.receiver = this.$root.ch.receivers[this.id]
-    this.receiver.connect(this.filter);
-  },
-	watch: {
-    receive(val) {
-      this.receiver.volume.value=Tone.gainToDb(val)
-    },
-    playing(val) {
-      if (val) {
+  methods: {
+    lfo() {
+      if (!this.playing) {
         this.filter.start();
       } else {
         this.filter.stop();
       }
+      this.playing = !this.playing
     }
-	},
+  },
   beforeDestroy() {
 
   }

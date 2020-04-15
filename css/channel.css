@@ -7,12 +7,17 @@
   border-radius: 4px;
 }
 
-.channel header {
+.channel header, .channel footer {
   padding: 0;
   width:100%;
   display: flex;
   flex-flow: row wrap;
   align-items: center;
+}
+
+.channel .module {
+  border:1px #aaa solid;
+  border-radius:4px;
 }
 
 .channel .handle {

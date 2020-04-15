@@ -1,4 +1,4 @@
-import sqnob from "../ui/sqnob.js"
+import knob from "../ui/knob.js"
 
 export const noiseGenerator = {
   title:'Noise',
@@ -20,22 +20,22 @@ export const noiseGenerator = {
         </button>
       </div>
 
-      <sqnob v-model="synth.noise.playbackRate" unit="" param="SPEED" :step="0.005" :min="0.1" :max="4"></sqnob>
+      <knob v-model="synth.noise.playbackRate" unit="" param="SPEED" :step="0.005" :min="0.1" :max="4"></knob>
 
       <div class="button-group">
         <span class="title">Envelope</span>
-        <sqnob v-model="synth.envelope.attack" unit="" param="ATT" :step="0.01" :min="0.005" :max="4"></sqnob>
-        <sqnob v-model="synth.envelope.decay" unit="" param="DEC" :step="0.01" :min="0.001" :max="6"></sqnob>
-        <sqnob v-model="synth.envelope.sustain" unit="" param="SUS" :step="0.01" :min="0.001" :max="1"></sqnob>
-        <sqnob v-model="synth.envelope.release" unit="" param="REL" :step="0.01" :min="0.001" :max="12"></sqnob>
+        <knob v-model="synth.envelope.attack" unit="" param="ATT" :step="0.01" :min="0.005" :max="4"></knob>
+        <knob v-model="synth.envelope.decay" unit="" param="DEC" :step="0.01" :min="0.001" :max="6"></knob>
+        <knob v-model="synth.envelope.sustain" unit="" param="SUS" :step="0.01" :min="0.001" :max="1"></knob>
+        <knob v-model="synth.envelope.release" unit="" param="REL" :step="0.01" :min="0.001" :max="12"></knob>
       </div>
 
-      <sqnob v-model="volume" unit="" param="VOL" :step="0.01" :min="0" :max="1"></sqnob>
+      <knob v-model="volume" unit="" param="VOL" :step="0.01" :min="0" :max="1"></knob>
 
     </div>
   `,
   components: {
-    sqnob
+    knob
   },
   data() {
     return {

@@ -1,45 +1,47 @@
-import sqnob from "../ui/sqnob.js"
+import knob from "../ui/knob.js"
 
 export const mic = {
   title:'Mic',
   name:'mic',
-  props:['id'],
+  props:['id','ch'],
   template: `
     <div class="audio-in row">
+      <button v-if="error"
+      @click="openMic()"
+      >OPEN</button>
       <button v-if="open" :class="{'active': active}"
-      @mousedown="active=true"
-      @mouseup="active=false"
-      @touchstart.stop.prevent="active=true"
-      @touchstop="active=false"
-      @touchcancel="active=false"
-      >
-          INPUT
-      </button>
-
+      @mousedown="active=!active"
+      @touchstart.stop.prevent="active=!active"
+      >INPUT</button>
+      {{error}}
     </div>
   `,
   components: {
-    sqnob
+    knob
   },
   data() {
     return {
       active: false,
       mic:{},
       open:false,
+      error:undefined,
     };
   },
   mounted() {
     this.mic = new Tone.UserMedia({mute:true});
-    this.mic.connect(this.$root.sources[this.id])
-    this.mic.open().then(() => {
-      this.open = true;
-    })
+    this.mic.connect(this.ch.channel);
+    this.mic.connect(this.ch.sender);
+    this.openMic()
   },
   filters: {
 
   },
   methods: {
-
+    openMic() {
+      this.mic.open().then(() => {
+        this.open = true;
+      }).catch((e) => {this.error = e.message})
+    }
   },
   watch: {
     active(val) {
