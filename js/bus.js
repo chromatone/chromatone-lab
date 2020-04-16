@@ -8,3 +8,7 @@ Vue.prototype.$resume = () => {
     Tone.context.resume();
   }
 }
+
+Vue.prototype.$hash = () => {
+  return Math.floor( Math.random() * Date.now());
+}

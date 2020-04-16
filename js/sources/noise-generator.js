@@ -10,9 +10,9 @@ export const noiseGenerator = {
           type: "brown"
         },
         envelope: {
-          attack: 0,
-          decay: 0.1,
-          sustain: 0.3,
+          attack: 0.5,
+          decay: 1,
+          sustain: 0.8,
           release: 1,
         },
         volume: 1,
@@ -30,7 +30,9 @@ export const noiseGenerator = {
   template: `
     <div class="noise-generator row">
 
-      <toggle v-model="active">Noise</toggle>
+      <trigger assignable @attack="attack()" @release="release()"> </trigger>
+
+      <toggle assignable v-model="active"></toggle>
 
       <choice v-model="synth.noise.type" :options="types">Noise type</choice>
 
@@ -54,21 +56,24 @@ export const noiseGenerator = {
     this.synth.set(this.options);
     this.synth.connect(this.ch.channel);
     this.synth.connect(this.ch.sender);
-    this.$root.$on('trigger', this.trigger);
   },
   methods: {
-    trigger(message) {
-      console.log(message)
-      this.synth.triggerAttackRelease('8n');
+    attack() {
+      this.$resume();
+      this.active=true;
+      this.synth.triggerAttack();
+    },
+    release() {
+      this.active=false;
+      this.synth.triggerRelease();
     }
   },
   watch: {
     active(val) {
       if (val) {
-        this.$resume();
-        this.synth.triggerAttack();
+        this.attack();
       } else {
-        this.synth.triggerRelease();
+        this.release();
       }
     },
   },

@@ -5,10 +5,11 @@
 }
 
 .channels header h2 {
+  text-transform: uppercase;
   cursor:pointer;
   font-size:14px;
   font-weight: normal;
-  margin: 4px;
+  margin: 4px 2px 0 4px;
 }
 
 .channels header {

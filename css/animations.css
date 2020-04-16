@@ -1,0 +1,23 @@
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 200ms;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+.blink-to {
+  animation: 600ms infinite alternate blink;
+}
+
+.blink-from {
+  animation: 200ms infinite alternate-reverse blink;
+}
+
+@keyframes blink {
+  from {
+    border-color:#FFF;
+  }
+  to {
+    border-color:#000;
+  }
+}

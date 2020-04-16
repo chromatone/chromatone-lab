@@ -3,7 +3,7 @@ export const controlsChannel = {
   props:['id','title','group'],
   data() {
     return {
-
+      show:true,
     };
   },
   template: `
@@ -12,30 +12,17 @@ export const controlsChannel = {
     <header>
       <span class="handle">
         &#9776;
-        <h3 >{{title.toUpperCase()}}</h3>
-      </span>
-
+        <h3  @click="show=!show">{{title.toUpperCase()}}</h3>
+      </span>  
+        <div class="spacer"></div>
     </header>
 
     <section class="module">
-      <slot :show="true"></slot>
+      <slot :show="show" ></slot>
     </section>
-
-    <footer>
-      <toggle v-model="$root.assignMode">ASSIGN</toggle>
-    </footer>
 
   </div>
   `,
-  created() {
-
-  },
-  computed:{
-
-  },
-  watch: {
-
-  },
   methods: {
 
   },

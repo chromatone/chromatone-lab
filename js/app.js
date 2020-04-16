@@ -2,10 +2,10 @@ import channels from './channels/channels.js'
 import * as ui from './ui/all.js'
 import './bus.js'
 
+Object.entries(ui).forEach((el) => {
+  Vue.component(el[0],el[1])
+})
 
-Vue.component('choice',ui.choice);
-Vue.component('toggle',ui.toggle);
-Vue.component('knob',ui.knob);
 
 
 const app = new Vue({
@@ -15,12 +15,23 @@ const app = new Vue({
   },
   data: {
     assignMode:false,
+    assign:{},
+    control:{
+      from:{},
+      to:{},
+    },
     ch:{
-      controls:{},
       sources:{},
       effects:{},
       senders:{},
       receivers:{},
+    }
+  },
+  watch: {
+    assignMode(val) {
+      if (!val) {
+        this.assign = {};
+      }
     }
   },
   methods: {

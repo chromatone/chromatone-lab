@@ -15,6 +15,7 @@ export default {
   data() {
     return {
       open:true,
+      adding: false,
       channels:{},
       allChannels:{
         effects,
@@ -28,29 +29,33 @@ export default {
     <section class="channels" >
 
       <header>
-        <h2>{{group.toUpperCase()}}</h2>
-        <button @click="add(ch)" v-for="ch in channels">
-          {{ch.title}}
-        </button>
+        <h2>{{group}}</h2>
+        <toggle v-if="group=='controls' && activeChannels.length>0" v-model="$root.assignMode">ASSIGN</toggle>
+        <toggle v-model="adding">+</toggle>
+        <transition-group name="fade">
+          <button v-show="adding" :key="ch.title" @click="add(ch)" v-for="ch in channels">
+            {{ch.title}}
+          </button>
+        </transition-group>
         <div class="spacer"></div>
       </header>
 
       <draggable class="container" v-if="activeChannels.length>0" v-model="activeChannels" handle=".handle">
         <transition-group name="fade">
             <component
-              :is="group+'-channel'"
-             :style="{backgroundColor:$color.hex(ch.id)}"
               v-for="ch in activeChannels"
+              :is="group+'-channel'"
+              :style="{backgroundColor:$color.hex(ch.id)}"
               :key="ch.id"
               :id="ch.id"
               :group="group"
               :title="ch.title"
               @close="remove(ch)"
-              v-slot="chParams">
+              v-slot="{show,ch:chan}">
               <transition name="fade">
                 <component
-                  v-show="open && chParams.show"
-                  :ch="chParams.ch"
+                  v-show="open && show"
+                  :ch="chan"
                   :is="ch.name"
                   :id="ch.id"
                   >
@@ -75,7 +80,7 @@ export default {
   methods: {
     add(mod) {
       let theMod = {...mod}
-      theMod.id = Math.floor( Math.random() * Date.now());
+      theMod.id = this.$hash();
       this.activeChannels.push(theMod)
     },
     remove(mod) {
