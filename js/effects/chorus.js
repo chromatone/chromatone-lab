@@ -1,11 +1,6 @@
-import knob from '../ui/knob.js'
-
 export const chorus = {
   title:'Chorus',
   name:'chorus',
-  components:{
-    knob,
-  },
   props: {
     id: [Number, String],
     ch: Object,

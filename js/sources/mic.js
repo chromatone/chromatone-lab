@@ -1,5 +1,3 @@
-import knob from "../ui/knob.js"
-
 export const mic = {
   title:'Mic',
   name:'mic',
@@ -13,9 +11,6 @@ export const mic = {
       {{error}}
     </div>
   `,
-  components: {
-    knob
-  },
   data() {
     return {
       active: false,

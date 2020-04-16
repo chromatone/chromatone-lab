@@ -1,5 +1,5 @@
 
-export default {
+export const knob = {
   props: {
     min:{
       type: Number,

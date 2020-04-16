@@ -1,4 +1,4 @@
-export default {
+export const choice = {
   name:'choice',
   props: ['value','options'],
   template:`

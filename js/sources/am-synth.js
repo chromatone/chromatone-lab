@@ -1,25 +1,38 @@
-export const noiseGenerator = {
-  title:'Noise',
-  name:'noise-generator',
 
+// https://tonejs.github.io/docs/13.8.25/AMSynth#modulation
+// https://tonejs.github.io/docs/14.5.46/AMSynth#modulation
+
+export const amSynth = {
+  title:'AM Synth',
+  name:'am-synth',
   props:['id','ch'],
   data() {
     return {
-      options: {
-        noise: {
-          type: "brown"
+      options:  {
+        harmonicity : 3 ,
+        detune : 0 ,
+        oscillator : {
+          type : 'sine'
         },
-        envelope: {
-          attack: 0,
-          decay: 0.1,
-          sustain: 0.3,
-          release: 1,
+        envelope : {
+          attack : 0.01 ,
+          decay : 0.01 ,
+          sustain : 1 ,
+          release : 0.5,
         },
-        volume: 1,
+        modulation : {
+          type : 'square'
+        },
+        modulationEnvelope : {
+          attack : 0.5 ,
+          decay : 0 ,
+          sustain : 1 ,
+          release : 0.5,
+        }
       },
       types: {
-        brown: 'brown',
-        pink: 'pink',
+        pulse: 'pulse',
+        fatcustom: 'fat',
         white: 'white'
       },
       active: false,
@@ -54,12 +67,12 @@ export const noiseGenerator = {
     this.synth.set(this.options);
     this.synth.connect(this.ch.channel);
     this.synth.connect(this.ch.sender);
-    this.$root.$on('trigger', this.trigger);
+    this.$root.$on('control', trigger);
   },
   methods: {
     trigger(message) {
-      console.log(message)
-      this.synth.triggerAttackRelease('8n');
+      console.log('message')
+      this.active = !this.active;
     }
   },
   watch: {

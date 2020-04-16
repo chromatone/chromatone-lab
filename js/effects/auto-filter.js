@@ -1,15 +1,6 @@
-import knob from '../ui/knob.js'
-import choice from '../ui/choice.js'
-import toggle from '../ui/toggle.js'
-
 export const autoFilter = {
   title:'Auto filter',
   name:'auto-filter',
-  components:{
-    knob,
-    choice,
-    toggle,
-  },
   props: {
     id: [Number, String],
     ch: Object,

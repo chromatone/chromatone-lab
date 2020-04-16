@@ -1,4 +1,4 @@
-export default {
+export const toggle = {
   name:'toggle',
   props: ['value'],
   template:`

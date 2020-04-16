@@ -1,11 +1,6 @@
-import knob from './knob.js'
-
-export default {
-  title:'Channel',
+export const sourcesChannel = {
+  title:'Sources Channel',
   props:['id','title','group'],
-  components: {
-    knob
-  },
   data() {
     return {
       show:true,
@@ -74,7 +69,7 @@ export default {
       this.receiver = this.createChannel('receivers');
       this.receiver.receive(this.id);
     }
-    this.$root.$on('unreceive', this.delSend)
+    this.$root.$on('unsend', this.delSend)
   },
   computed:{
     receivers() {
@@ -121,11 +116,7 @@ export default {
     send(id) {
       let send = this.sender.send(id);
       send.title = this.$root.ch.receivers[id].title;
-      this.$set(
-        this.sends,
-        id,
-        send
-      )
+      this.$set(this.sends, id, send)
     }
   },
   beforeDestroy() {
@@ -136,7 +127,7 @@ export default {
     if (this.receiver.dispose) {
       this.receiver.dispose()
       this.$delete(this.$root.ch.receivers,this.id)
-      this.$root.$emit('unreceive',this.id)
+      this.$root.$emit('unsend',this.id)
     }
   }
 };

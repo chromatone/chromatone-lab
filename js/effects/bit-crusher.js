@@ -1,11 +1,6 @@
-import knob from '../ui/knob.js'
-
 export const bitCrusher = {
   title:'Bit crusher',
   name:'bit-crusher',
-  components:{
-    knob,
-  },
   props: {
     id: [Number, String],
     ch: Object,

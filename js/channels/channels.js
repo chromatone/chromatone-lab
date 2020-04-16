@@ -1,14 +1,16 @@
-import channel from './channel.js'
+import * as channels from './all.js'
 import * as effects from '../effects/all.js'
 import * as sources from '../sources/all.js'
+import * as controls from '../controls/all.js'
 
 export default {
   title:'Channels',
   props:['group'],
   components:{
-    channel,
+    ...channels,
     ...effects,
     ...sources,
+    ...controls,
   },
   data() {
     return {
@@ -17,6 +19,7 @@ export default {
       allChannels:{
         effects,
         sources,
+        controls,
       },
       activeChannels:[],
     };
@@ -34,7 +37,8 @@ export default {
 
       <draggable class="container" v-if="activeChannels.length>0" v-model="activeChannels" handle=".handle">
         <transition-group name="fade">
-            <channel
+            <component
+              :is="group+'-channel'"
              :style="{backgroundColor:$color.hex(ch.id)}"
               v-for="ch in activeChannels"
               :key="ch.id"
@@ -52,7 +56,7 @@ export default {
                   >
                 </component>
               </transition>
-          </channel>
+          </component>
         </transition-group>
       </draggable>
     </section>
