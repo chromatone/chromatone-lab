@@ -10,5 +10,5 @@ Vue.prototype.$resume = () => {
 }
 
 Vue.prototype.$hash = () => {
-  return Math.floor( Math.random() * Date.now());
+  return String(Math.floor( Math.random() * Date.now()));
 }

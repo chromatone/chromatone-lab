@@ -1,14 +1,11 @@
-export const mic = {
-  title:'Mic',
-  name:'mic',
+export const audioIn = {
+  title:'Audio in',
+  name:'audioIn',
   props:['id','ch'],
   template: `
     <div class="audio-in row">
-      <button v-if="open" :class="{'active': active}"
-      @mousedown="active=!active"
-      @touchstart.stop.prevent="active=!active"
-      >INPUT</button>
-      {{error}}
+      <trigger @attack="active=true" @release="active=false"></trigger>
+      <toggle v-model="active" v-if="open">INPUT</toggle>
     </div>
   `,
   data() {

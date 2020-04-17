@@ -20,8 +20,8 @@ export const trigger = {
     </button>
   `,
   watch: {
-    '$root.control'() {
-      console.log('yes')
+    '$root.control'(val) {
+      console.log(val)
     }
   },
   computed: {
@@ -37,7 +37,7 @@ export const trigger = {
       this.$emit('release')
     },
     activate() {
-      if (this.assignable && this.$root.assign.id) {
+      if (this.assignable && this.$root.assignMode && this.$root.assign.id) {
         this.assign(); return
       }
       document.onmouseup = this.deactivate;
@@ -54,7 +54,8 @@ export const trigger = {
     assign() {
       let {assign, control} = this.$root
       if (assign.type=='trigger') {
-        this.$set(control, this.id, assign);
+        this.$set(control.from, assign.id, this.id);
+        this.$set(control.to, this.id, assign);
         this.$root.$on(assign.id, this.press);
         this.$root.assignMode=false;
       }

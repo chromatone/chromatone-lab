@@ -15,36 +15,36 @@ export const triggers = {
         :key="trig.id"
         :style="{backgroundColor:$color.hex(trig.id)}"
         :class="{'alt-active':$root.assignMode, 'blink-from':$root.assign==trig}"
-        @attack="attack(trig.id)" @release="release(trig.id)">TRIGGER
+        @attack="attack(trig)" @release="release(trig)">TRIGGER
       </trigger>
     </section>
   `,
   methods: {
     addTrigger() {
       let trigger = {
-        id: ''+this.$hash(),
-        type: 'trigger',
+        id: this.$hash(),
+        velocity:1,
+        type:undefined,
       }
       this.triggers.push(trigger)
     },
-    attack(id) {
-      console.log(id)
+    attack(trig) {
+      if (this.$root.assignMode) { this.assign(trig); return }
+      trig.type="attack"
+      this.$root.$emit(trig.id,trig);
     },
-    release(id) {
-      console.log(id)
+    release(trig) {
+      if (this.$root.assignMode) { return }
+      trig.type="release"
+      this.$root.$emit(trig.id,trig);
     },
-    trigger(trig) {
-      console.log(trig.id)
-      if (!this.$root.assignMode) {
-        this.$root.$emit(trig.id,trig);
-        return
-      }
+    assign(trig) {
       if (this.$root.assign != trig) {
         this.$root.assign = trig;
       } else {
         this.$root.assign = {}
       }
-    }
+    },
   },
   computed: {
 
