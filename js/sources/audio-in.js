@@ -4,31 +4,31 @@ export const audioIn = {
   props:['id','ch'],
   template: `
     <div class="audio-in row">
-      <trigger @attack="active=true" @release="active=false"></trigger>
+      <trigger :inId="id" @attack="active=true" @release="active=false"></trigger>
       <toggle v-model="active" v-if="open">INPUT</toggle>
     </div>
   `,
   data() {
     return {
       active: false,
-      mic:{},
+      input:{},
       open:false,
       error:undefined,
     };
   },
   mounted() {
-    this.mic = new Tone.UserMedia({mute:true});
-    this.mic.connect(this.ch.channel);
-    this.mic.connect(this.ch.sender);
-    this.openMic()
+    this.input = new Tone.UserMedia({mute:true});
+    this.input.connect(this.ch.channel);
+    this.input.connect(this.ch.sender);
+    this.openInput()
   },
   filters: {
 
   },
   methods: {
-    openMic() {
+    openInput() {
       this.$resume;
-      this.mic.open().then(() => {
+      this.input.open().then(() => {
         this.open = true;
       }).catch((e) => {this.error = e.message})
     }
@@ -36,9 +36,9 @@ export const audioIn = {
   watch: {
     active(val) {
       if (val) {
-        this.mic.mute=false
+        this.input.mute=false
       } else {
-        this.mic.mute=true
+        this.input.mute=true
       }
     }
   },

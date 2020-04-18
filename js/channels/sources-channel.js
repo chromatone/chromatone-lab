@@ -10,6 +10,7 @@ export const sourcesChannel = {
       receiver: {},
       sends:{},
       sendEnabled:false,
+      addSend:false,
       receiveLevel:1,
       sendLevel:1,
     };
@@ -25,16 +26,31 @@ export const sourcesChannel = {
       <knob v-if="group=='effects'" v-model="receiveLevel">RECEIVE</knob>
       <knob v-model="volume">VOL</knob>
       <knob v-model="channel.pan.value" :min="-1" >PAN</knob>
-      <button
-        v-if="!sendEnabled"
-        @click="sendEnabled=true">
-        SEND
-      </button>
-      <knob v-model="sendLevel" v-if="sendEnabled">SEND</knob>
-      <knob v-if="sendEnabled"
-        v-for="(send, key) in sends" :key="key"
-        :color="$color.hex(key)"
-        v-model="send._gainNode.gain.value" :step="0.01" :min="0" :max="1">{{send.title}}</knob>
+
+
+      <div v-if="Object.entries(sends).length>0" class="button-group">
+        <span class="title" >SENDS</span>
+        <knob v-model="sendLevel">ALL</knob>
+        <knob
+          v-for="(send, key) in sends" :key="key"
+          :color="$color.hex(key)"
+          v-model="send._gainNode.gain.value" :step="0.01" :min="0" :max="1">{{send.title}}</knob>
+      </div>
+      <toggle
+        v-model="addSend">
+        + SEND
+      </toggle>
+      <div class="button-group" v-if="addSend && Object.entries(receivers).length>0">
+        <span class="title">Add</span>
+        <button
+          v-for="effect in receivers"
+          :style="{backgroundColor:$color.hex(effect.id)}"
+          :key="effect.id"
+          v-if="effect.id!=id && !sends[effect.id]"
+          @click="send(effect.id)">
+          {{effect.title}}
+        </button>
+      </div>
       <div class="spacer"></div>
       <div class="close" @click="$emit('close')">
         &times;
@@ -47,16 +63,7 @@ export const sourcesChannel = {
 
     <footer v-if="sendEnabled && receivers.length>0">
 
-      <h3>SEND TO</h3>
 
-      <button
-        v-for="effect in receivers"
-        :style="{backgroundColor:$color.hex(effect.id)}"
-        :key="effect.id"
-        v-if="effect.id!=id && !sends[effect.id]"
-        @click="send(effect.id)">
-        {{effect.title}}
-      </button>
 
     </footer>
 
