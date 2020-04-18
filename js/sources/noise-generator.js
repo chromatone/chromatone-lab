@@ -30,7 +30,7 @@ export const noiseGenerator = {
   template: `
     <div class="noise-generator row">
 
-      <trigger :activated="active" assignable @attack="attack()" @release="release()"> </trigger>
+      <trigger :inId="id" :activated="active" @attack="attack()" @release="release()"> </trigger>
 
       <toggle assignable v-model="active"></toggle>
 

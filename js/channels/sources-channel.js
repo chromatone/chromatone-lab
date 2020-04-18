@@ -74,8 +74,8 @@ export const sourcesChannel = {
   computed:{
     receivers() {
       let receivers = []
-      for (let i in this.$root.ch.receivers) {
-        let receiver = this.$root.ch.receivers[i]
+      for (let i in this.$ch.receivers) {
+        let receiver = this.$ch.receivers[i]
         if (receiver.id != this.id && !this.sends[receiver.id]) {
           receivers.push(receiver)
         }
@@ -107,7 +107,7 @@ export const sourcesChannel = {
       channel.group = this.group;
       channel.title = this.title;
       this.$set(
-        this.$root.ch[group],
+        this.$ch[group],
         this.id,
         channel
       )
@@ -115,18 +115,18 @@ export const sourcesChannel = {
     },
     send(id) {
       let send = this.sender.send(id);
-      send.title = this.$root.ch.receivers[id].title;
+      send.title = this.$ch.receivers[id].title;
       this.$set(this.sends, id, send)
     }
   },
   beforeDestroy() {
     this.channel.dispose()
     this.sender.dispose()
-    this.$delete(this.$root.ch[this.group],this.id)
-    this.$delete(this.$root.ch.senders,this.id)
+    this.$delete(this.$ch[this.group],this.id)
+    this.$delete(this.$ch.senders,this.id)
     if (this.receiver.dispose) {
       this.receiver.dispose()
-      this.$delete(this.$root.ch.receivers,this.id)
+      this.$delete(this.$ch.receivers,this.id)
       this.$root.$emit('unsend',this.id)
     }
   }

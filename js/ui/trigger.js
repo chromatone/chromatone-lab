@@ -1,51 +1,92 @@
 export const trigger = {
   name:'trigger',
   props: {
-    assignable: {
-      type: Boolean,
-      default: false,
-    },
+    inId: String,
+    outId: String,
     activated: Boolean,
   },
   data() {
     return {
-      controls:{},
+      controller:undefined,
+      controlled:undefined,
       active:false,
-      id:this.$hash(),
+      message: {
+        id: this.outId,
+        velocity:1,
+        type:'trigger',
+        action:'attack',
+      }
     }
   },
   template:`
-    <button class="trigger" :class="{'active': active || activated,'blink-to':assignable && $root.assign.id && $root.assign.type == 'trigger'}"
+    <button class="trigger"
+      :class="{'active': active || activated,
+      'alt-active':$bus.assigning && outId,
+      'blink-to': $bus.assign.id && $bus.assign.type == 'trigger',
+      'blink-from':$bus.assign==message}"
+      :style="{backgroundColor:outerColor}"
       @touchstart.stop.prevent="activate()"
       @mousedown.stop.prevent="activate()">
-      <slot><div :style="{backgroundColor:$color.hex(id)}" class="dot"></div></slot>
+      <slot><div :style="{backgroundColor: innerColor}" class="dot"></div></slot>
     </button>
   `,
-  watch: {
-    '$root.control'(val) {
-      console.log(val)
+  computed: {
+    outerColor() {
+      if (this.outId) {
+        return this.$color.hex(this.outId)
+      }
+      if (this.controller) {
+        return this.$color.hex(this.controller)
+      }
+      return '#fefefe'
+    },
+    innerColor() {
+      if (this.inId) {
+        return this.$color.hex(this.inId)
+      }
+      if (this.controlled) {
+        return this.$color.hex(this.controlled)
+      }
+      return '#fefefe'
     }
   },
-  computed: {
-
+  created() {
+    this.$bus.$on('connectFrom/'+this.outId,this.connect)
   },
   methods: {
+    connect(id) {
+      console.log(id)
+      this.controlled = id
+    },
     play() {
       this.active=true;
       this.$emit('attack')
+      if (this.outId) {
+        this.message.action = 'attack'
+        this.$bus.$emit(this.outId,this.message);
+      }
     },
     stop() {
       this.active=false;
       this.$emit('release')
+      if (this.outId) {
+        this.message.action = 'release'
+        this.$bus.$emit(this.outId,this.message);
+      }
     },
     activate() {
-      if (this.assignable && this.$root.assignMode && this.$root.assign.id) {
-        this.assign(); return
+      if (!this.$bus.assigning) {
+        document.onmouseup = this.deactivate;
+        document.addEventListener("touchend", this.deactivate);
+        document.addEventListener("touchcancel", this.deactivate);
+        this.play();
+      } else {
+        if (this.inId) {
+          this.assignTo(); return
+        }
+        if (this.outId) {
+          this.assignFrom(); return }
       }
-      document.onmouseup = this.deactivate;
-      document.addEventListener("touchend", this.deactivate);
-      document.addEventListener("touchcancel", this.deactivate);
-      this.play();
     },
     deactivate() {
       this.stop();
@@ -53,14 +94,28 @@ export const trigger = {
       document.removeEventListener("touchcancel", this.deactivate);
       document.removeEventListener("touchend", this.deactivate);
     },
-    assign() {
-      let {assign, control} = this.$root
-      if (assign.type=='trigger') {
-        this.$set(control.from, assign.id, this.id);
-        this.$set(control.to, this.id, assign);
-        this.$root.$on(assign.id, this.press);
-        this.$root.assignMode=false;
+    assignTo() {
+      if (this.$bus.assign.type=='trigger') {
+        this.$bus.$off(this.controller, this.react);
+        this.$bus.$emit('connectFrom/'+this.controller);
+        this.controller = this.$bus.assign.id;
+        this.$bus.$emit('connectFrom/'+this.controller, this.inId);
+        this.$bus.$on(this.controller, this.react);
+        this.$bus.assigning=false;
       }
     },
+    assignFrom() {
+      if (this.$bus.assign != this.message) {
+        this.$bus.assign = this.message;
+      } else {
+        this.$bus.assign = {}
+      }
+    },
+    react(val) {
+      this.$emit(val.action, val)
+    }
+  },
+  beforeDestroy() {
+    this.$bus.$off(this.controller, this.react)
   },
 }

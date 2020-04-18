@@ -8,18 +8,12 @@ export const toggle = {
     }
   },
   template:`
-    <button class="toggle" :class="{active:value, 'blink-to':assignable && $root.assign.type=='toggle'}"
+    <button class="toggle" :class="{active:value, 'blink-to':assignable && $bus.assign.type=='toggle'}"
       @click="press()"><div class="toggler"><slot></slot></div></button>
   `,
   methods: {
     press() {
-      if (!this.assignable || !this.$root.assign.id) {
-        this.$emit('input', !this.value);
-      } else {
-        if (this.$root.assign.type=='trigger') {
-
-        }
-      }
+      this.$emit('input', !this.value);
     }
   },
 }

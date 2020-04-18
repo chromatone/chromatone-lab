@@ -30,14 +30,14 @@ export default {
 
       <header>
         <h2>{{group}}</h2>
-        <toggle v-if="group=='controls' && activeChannels.length>0" v-model="$root.assignMode">ASSIGN</toggle>
-        <toggle v-model="adding">+</toggle>
+
         <transition-group name="fade">
-          <button v-show="adding" :key="ch.title" @click="add(ch)" v-for="ch in channels">
+          <button :key="ch.title" @click="add(ch)" v-for="ch in channels">
             {{ch.title}}
           </button>
         </transition-group>
         <div class="spacer"></div>
+        <toggle v-if="group=='controls' && activeChannels.length>0" v-model="$bus.assigning">ASSIGN</toggle>
       </header>
 
       <draggable class="container" v-if="activeChannels.length>0" v-model="activeChannels" handle=".handle">

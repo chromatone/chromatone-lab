@@ -12,42 +12,16 @@ export const triggers = {
       <trigger @attack="addTrigger()">+</trigger>
       <trigger
         v-for="trig in triggers"
-        :key="trig.id"
-        :id="trig.id"
-        :style="{backgroundColor:$color.hex(trig.id)}"
-        :class="{'alt-active':$root.assignMode, 'blink-from':$root.assign==trig}"
-        @attack="attack(trig)" @release="release(trig)">
+        :outId="trig.id"
+        :key="trig.id">
       </trigger>
     </section>
   `,
   methods: {
     addTrigger() {
-      let trigger = {
+      this.triggers.push({
         id: this.$hash(),
-        velocity:1,
-        type:undefined,
-      }
-      this.triggers.push(trigger)
-    },
-    attack(trig) {
-      if (this.$root.assignMode) { this.assign(trig); return }
-      trig.type="attack"
-      this.$root.$emit(trig.id,trig);
-    },
-    release(trig) {
-      if (this.$root.assignMode) { return }
-      trig.type="release"
-      this.$root.$emit(trig.id,trig);
-    },
-    assign(trig) {
-      if (this.$root.assign != trig) {
-        this.$root.assign = trig;
-      } else {
-        this.$root.assign = {}
-      }
+      })
     },
   },
-  computed: {
-
-  }
 }
