@@ -2,19 +2,23 @@
   scroll-snap-align: start end;
   position:relative;
   cursor: pointer;
+  z-index:4;
   max-width:min-content;
-  border:1px solid hsla(0,0%,0%,0.6);
-  border-radius: 4px;
+  border:2px solid hsla(0,0%,0%,0.4);
+  border-radius: 8px;
   font-size:1em;
   margin:4px;
   min-height:2em;
   display: flex;
   flex-flow: row wrap;
   align-items: center;
+  box-shadow: inset 0px -2px 2px 0 hsla(0,0%,100%,0.63), inset 0px 2px 2px 0 hsla(208, 6%, 60%, 0.5);
+
 }
 
 .knob .info {
   text-transform: uppercase;
+  position:relative;
   user-select: none;
   padding: 6px;
   font-size: 10px;
@@ -28,10 +32,9 @@
   background-color: hsla(0,0%,95%,1);
   z-index:2;
   position: absolute;
-  border-radius: 4px;
+  border-radius:6px;
   width:100%;
   bottom:0;
-  border-top:1px solid #444;
 }
 
 .knob.active .num {

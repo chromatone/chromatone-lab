@@ -5,18 +5,20 @@ export const trigger = {
       type: Boolean,
       default: false,
     },
+    activated: Boolean,
   },
   data() {
     return {
       controls:{},
       active:false,
+      id:this.$hash(),
     }
   },
   template:`
-    <button class="trigger" :class="{active,'blink-to':assignable && $root.assign.id && $root.assign.type == 'trigger'}"
+    <button class="trigger" :class="{'active': active || activated,'blink-to':assignable && $root.assign.id && $root.assign.type == 'trigger'}"
       @touchstart.stop.prevent="activate()"
       @mousedown.stop.prevent="activate()">
-      <slot></slot>
+      <slot><div :style="{backgroundColor:$color.hex(id)}" class="dot"></div></slot>
     </button>
   `,
   watch: {

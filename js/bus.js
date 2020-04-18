@@ -12,3 +12,10 @@ Vue.prototype.$resume = () => {
 Vue.prototype.$hash = () => {
   return String(Math.floor( Math.random() * Date.now()));
 }
+
+
+Vue.prototype.$bus = new Vue({
+  data: {
+
+  }
+});

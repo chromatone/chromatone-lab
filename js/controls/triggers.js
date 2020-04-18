@@ -13,9 +13,10 @@ export const triggers = {
       <trigger
         v-for="trig in triggers"
         :key="trig.id"
+        :id="trig.id"
         :style="{backgroundColor:$color.hex(trig.id)}"
         :class="{'alt-active':$root.assignMode, 'blink-from':$root.assign==trig}"
-        @attack="attack(trig)" @release="release(trig)">TRIGGER
+        @attack="attack(trig)" @release="release(trig)">
       </trigger>
     </section>
   `,

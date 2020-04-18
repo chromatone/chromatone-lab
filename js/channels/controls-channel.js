@@ -13,8 +13,9 @@ export const controlsChannel = {
       <span class="handle">
         &#9776;
         <h3  @click="show=!show">{{title.toUpperCase()}}</h3>
-      </span>  
+      </span>
         <div class="spacer"></div>
+        <div class="close" @click="$emit('close')">&times;</div>
     </header>
 
     <section class="module">
