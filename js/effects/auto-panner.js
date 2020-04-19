@@ -1,13 +1,6 @@
-import knob from '../ui/knob.js'
-import toggle from '../ui/toggle.js'
-
 export const autoPanner = {
   title:'Auto panner',
   name:'auto-panner',
-  components:{
-    knob,
-    toggle,
-  },
   props: {
     id: [Number, String],
     ch: Object,
@@ -43,8 +36,9 @@ export const autoPanner = {
     }
 	},
   created() {
+    console.log(this.ch.channel.channelCount)
     this.panner.set(this.options);
-    this.panner.connect(this.ch.channel);
+    this.panner.connect(this.ch.channel,0,0);
     this.panner.connect(this.ch.sender);
     this.ch.receiver.connect(this.panner);
   },
