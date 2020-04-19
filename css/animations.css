@@ -6,11 +6,11 @@
 }
 
 .blink-to {
-  animation: 300ms infinite alternate blink;
+  animation: 150ms infinite alternate blink;
 }
 
 .blink-from {
-  animation: 100ms infinite alternate-reverse blink;
+  animation: 300ms infinite alternate-reverse blink;
 }
 
 @keyframes blink {

@@ -1,3 +1,5 @@
+const mixin = {}
+
 Vue.prototype.$bus = new Vue({  // CONTROL BUS
   el:"#bus",
   data: {
@@ -25,6 +27,13 @@ Vue.prototype.$ch = new Vue({  // AUDIO BUS
   }
 });
 
+Vue.prototype.$noteFreq =  (pitch=0, octave = 3) => {
+    return Number(440 * Math.pow(2, octave - 4 + pitch / 12));
+}
+
+Vue.prototype.$noteColor = (pitch, octave = 3) => {
+  return `hsla(${pitch*30},100%,${(octave+5)*8}%,1)`
+}
 
 Vue.prototype.$color = new ColorHash({
   saturation:[0.25, 0.35, 0.5],

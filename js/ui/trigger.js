@@ -4,6 +4,11 @@ export const trigger = {
     inId: String,
     outId: String,
     activated: Boolean,
+    pitch: Number,
+    octave: {
+      default:1,
+      type:Number,
+    }
   },
   data() {
     return {
@@ -15,6 +20,8 @@ export const trigger = {
         velocity:1,
         type:'trigger',
         action:'attack',
+        pitch:this.pitch,
+        octave:this.octave,
       }
     }
   },
@@ -32,8 +39,8 @@ export const trigger = {
          @touchstart.stop.prevent="startAssign()"
          @mousedown.stop.prevent="startAssign()"
          v-if="$bus.assigning && (inId || outId)"
-         :style="{backgroundColor:outerColor}"
-         :class="{'blink-to': $bus.assign.id && $bus.assign.type == 'trigger','blink-from':$bus.assign==message}"
+         :style="{backgroundColor:outerColor || innerColor}"
+         :class="{'blink-to': $bus.assign.id && $bus.assign.type == 'trigger' && inId,'blink-from':$bus.assign==message}"
          class="assigner">
        </div>
     </button>
@@ -43,7 +50,6 @@ export const trigger = {
   },
   methods: {
     enter() {
-      console.log('enter')
       if(this.$bus.active && !this.active) {
         this.play()
       }
@@ -53,17 +59,19 @@ export const trigger = {
     },
     play() {
       this.active=true;
-      this.$emit('attack')
+      this.message.action = 'attack';
+      this.message.pitch = this.pitch;
+      this.message.octave = this.octave;
+      this.$emit('attack', this.message)
       if (this.outId) {
-        this.message.action = 'attack'
         this.$bus.$emit(this.outId,this.message);
       }
     },
     stop() {
       this.active=false;
-      this.$emit('release')
+      this.message.action = 'release'
+      this.$emit('release', this.message)
       if (this.outId) {
-        this.message.action = 'release'
         this.$bus.$emit(this.outId,this.message);
       }
     },
@@ -106,18 +114,25 @@ export const trigger = {
       }
     },
     react(val) {
+      if (val.action && val.action=='attack') {
+        this.note = val;
+      } else {
+        this.note = undefined;
+      }
       this.$emit(val.action, val)
     }
   },
   computed: {
     outerColor() {
+      if (this.pitch != undefined) {
+        return this.$noteColor(this.pitch,this.octave)
+      }
       if (this.outId) {
         return this.$color.hex(this.outId)
       }
       if (this.controller) {
         return this.$color.hex(this.controller)
       }
-      return '#fefefe'
     },
     innerColor() {
       if (this.inId) {
