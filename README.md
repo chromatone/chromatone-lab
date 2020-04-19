@@ -2,6 +2,8 @@
 
 A web-app to play with different types of sound sources and effects
 
+[SEE DEMO VIDEO](https://youtu.be/wVtFRWO_SEw)
+
 Based on [ToneJS](https://tonejs.github.io/)
 
 ## Chromatone apps
