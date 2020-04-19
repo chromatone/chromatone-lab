@@ -41,8 +41,10 @@
 
 .channel .handle {
   font-weight: normal;
-  font-size: 1.4em;
+  font-size: 1.2em;
   cursor:grab;
+  display:flex;
+  align-items:center;
 }
 
 .sortable-chosen .handle {

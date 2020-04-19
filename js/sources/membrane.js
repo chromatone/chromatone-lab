@@ -27,7 +27,6 @@ export const membrane = {
       <trigger :inId="id" :activated="active" @attack="attack" @release="release"> </trigger>
 
       <toggle assignable v-model="active"></toggle>
-
       <knob v-model="synth.octaves" :step="0.5" :min="0" :max="12">octaves</knob>
       <knob v-model="synth.pitchDecay" :step="0.005" :min="0.001" :max="0.2">decay</knob>
 

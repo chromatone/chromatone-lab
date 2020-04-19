@@ -3,6 +3,7 @@ export const trigger = {
   props: {
     inId: String,
     outId: String,
+    beat:false,
     activated: Boolean,
     pitch: Number,
     octave: {
@@ -46,12 +47,21 @@ export const trigger = {
     </button>
   `,
   created() {
-    this.$bus.$on('connectFrom/'+this.outId,this.connect)
+    this.$bus.$on('connectFrom/'+this.outId, this.connect)
+  },
+  watch: {
+    beat(val) {
+      if (val) {
+        this.play();
+      } else {
+        this.stop();
+      }
+    }
   },
   methods: {
     enter() {
       if(this.$bus.active && !this.active) {
-        this.play()
+        this.play();
       }
     },
     connect(id) {

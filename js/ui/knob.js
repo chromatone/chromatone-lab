@@ -141,11 +141,11 @@ export const knob = {
   }
 }
 
-function mapNumber(value, inputmin=0, inputmax=100, rangemin=0, rangemax=100, step) {
+function mapNumber(value, inputmin=0, inputmax=100, rangemin=0, rangemax=100, step=1) {
   rangemax = parseFloat(rangemax);
   rangemin = parseFloat(rangemin);
   inputmax = parseFloat(inputmax);
   inputmin = parseFloat(inputmin);
   let result = (value - inputmin) * (rangemax - rangemin) / (inputmax - inputmin) + rangemin;
-  return result * (step || 100) / (step || 100);
+  return Math.round(result / step)  * step;
 }
