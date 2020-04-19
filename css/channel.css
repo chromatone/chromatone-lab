@@ -5,7 +5,7 @@
   flex-flow: row wrap;
   align-items: center;
   border-radius: 4px;
-  box-shadow:  0px -4px 4px 0 hsla(0,0%,100%,0.53), 0px 4px 4px 0 hsla(208, 6%, 60%, 0.5);
+  box-shadow:  0px -2px 4px 2px hsla(0,0%,100%,0.63), 0px 2px 4px 3px hsla(208, 6%, 60%, 0.4);
 }
 .channel header {
     flex:1 1 100%;
