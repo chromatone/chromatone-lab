@@ -9,7 +9,7 @@ export const triggers = {
   },
   template:`
     <section class="row">
-      <trigger @attack="addTrigger()">+</trigger>
+      <button @click="addTrigger()">+</button>
       <trigger
         v-for="trig in triggers"
         :outId="trig.id"

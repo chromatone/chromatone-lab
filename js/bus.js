@@ -5,6 +5,7 @@ Vue.prototype.$bus = new Vue({  // CONTROL BUS
     to:{},
     assign:{},
     assigning:false,
+    active:false,
   },
   watch: {
     assigning(val) {

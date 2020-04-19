@@ -20,42 +20,35 @@ export const trigger = {
   },
   template:`
     <button class="trigger"
-      :class="{'active': active || activated,
-      'alt-active':$bus.assigning && outId,
-      'blink-to': $bus.assign.id && $bus.assign.type == 'trigger',
-      'blink-from':$bus.assign==message}"
+      :class="{'active': active || activated}"
       :style="{backgroundColor:outerColor}"
       @touchstart.stop.prevent="activate()"
-      @mousedown.stop.prevent="activate()">
+      @touchmove.stop.prevent="enter()"
+      @mousedown.stop.prevent="activate()"
+      @mouseover="enter()"
+      @mouseleave="stop()">
       <slot><div :style="{backgroundColor: innerColor}" class="dot"></div></slot>
+      <div
+         @touchstart.stop.prevent="startAssign()"
+         @mousedown.stop.prevent="startAssign()"
+         v-if="$bus.assigning && (inId || outId)"
+         :style="{backgroundColor:outerColor}"
+         :class="{'blink-to': $bus.assign.id && $bus.assign.type == 'trigger','blink-from':$bus.assign==message}"
+         class="assigner">
+       </div>
     </button>
   `,
-  computed: {
-    outerColor() {
-      if (this.outId) {
-        return this.$color.hex(this.outId)
-      }
-      if (this.controller) {
-        return this.$color.hex(this.controller)
-      }
-      return '#fefefe'
-    },
-    innerColor() {
-      if (this.inId) {
-        return this.$color.hex(this.inId)
-      }
-      if (this.controlled) {
-        return this.$color.hex(this.controlled)
-      }
-      return '#fefefe'
-    }
-  },
   created() {
     this.$bus.$on('connectFrom/'+this.outId,this.connect)
   },
   methods: {
+    enter() {
+      console.log('enter')
+      if(this.$bus.active && !this.active) {
+        this.play()
+      }
+    },
     connect(id) {
-      console.log(id)
       this.controlled = id
     },
     play() {
@@ -75,24 +68,25 @@ export const trigger = {
       }
     },
     activate() {
-      if (!this.$bus.assigning) {
-        document.onmouseup = this.deactivate;
-        document.addEventListener("touchend", this.deactivate);
-        document.addEventListener("touchcancel", this.deactivate);
-        this.play();
-      } else {
-        if (this.inId) {
-          this.assignTo(); return
-        }
-        if (this.outId) {
-          this.assignFrom(); return }
-      }
+      this.$bus.active = true;
+      document.onmouseup = this.deactivate;
+      document.addEventListener("touchend", this.deactivate);
+      document.addEventListener("touchcancel", this.deactivate);
+      this.play();
     },
     deactivate() {
+      this.$bus.active = false;
       this.stop();
       document.onmouseup = undefined;
       document.removeEventListener("touchcancel", this.deactivate);
       document.removeEventListener("touchend", this.deactivate);
+    },
+    startAssign() {
+      if (this.inId) {
+        this.assignTo(); return
+      }
+      if (this.outId) {
+        this.assignFrom(); return }
     },
     assignTo() {
       if (this.$bus.assign.type=='trigger') {
@@ -113,6 +107,26 @@ export const trigger = {
     },
     react(val) {
       this.$emit(val.action, val)
+    }
+  },
+  computed: {
+    outerColor() {
+      if (this.outId) {
+        return this.$color.hex(this.outId)
+      }
+      if (this.controller) {
+        return this.$color.hex(this.controller)
+      }
+      return '#fefefe'
+    },
+    innerColor() {
+      if (this.inId) {
+        return this.$color.hex(this.inId)
+      }
+      if (this.controlled) {
+        return this.$color.hex(this.controlled)
+      }
+      return '#fefefe'
     }
   },
   beforeDestroy() {
