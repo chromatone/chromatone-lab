@@ -1,5 +1,3 @@
-const MembraneSynth = new Tone.MembraneSynth()
-
 export const membrane = {
   title:'Membrane',
   name:'membrane',
@@ -7,9 +5,9 @@ export const membrane = {
   props:['id','ch'],
   data() {
     return {
-      options: MembraneSynth.get(),
+      options: new Tone.MembraneSynth().get(),
       active: false,
-      synth: MembraneSynth,
+      synth: new Tone.MembraneSynth(),
       send: {},
     }
   },

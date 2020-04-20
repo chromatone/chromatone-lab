@@ -5,18 +5,7 @@ export const noiseGenerator = {
   props:['id','ch'],
   data() {
     return {
-      options: {
-        noise: {
-          type: "brown"
-        },
-        envelope: {
-          attack: 0.5,
-          decay: 1,
-          sustain: 0.8,
-          release: 1,
-        },
-        volume: 1,
-      },
+      options: new Tone.NoiseSynth().get(),
       types: {
         brown: 'brown',
         pink: 'pink',

@@ -17,10 +17,7 @@ export const knob = {
       type: Number,
       default:0.01,
     },
-    value:{
-      type: Number,
-      default:'',
-    },
+    id: String,
     signal:Object,
     volume:Object,
     color:String,
@@ -28,15 +25,20 @@ export const knob = {
   template: `
   <div
     :class="{active:active}"
-    @mousedown.prevent="mouseDown"
-    @touchstart.prevent="activate"
+    @mousedown.stop.prevent="mouseDown"
+    @touchstart.stop.prevent="activate"
     @dblclick="reset()"
     class="knob">
-    <div class="num">{{output | round}}</div>
+    <div class="num">{{output.toFixed(1)}}</div>
     <div class="info">
       <slot></slot>
     </div>
     <div class="value" :style="{height:internalValue+'%', backgroundColor:color}"></div>
+    <div
+      @touchstart.stop.prevent="assign()"
+      @mousedown.stop.prevent="assign()"
+      v-if="$bus.assigning && $bus.assign.type=='knob' && $bus.assign.id != id"
+      class="assigner blink-to"></div>
   </div>
   `,
   data() {
@@ -50,6 +52,7 @@ export const knob = {
       initialDragValue: undefined,
       shiftPressed: false,
       activeTouch:undefined,
+      controller:undefined,
     };
   },
   watch: {
@@ -62,12 +65,21 @@ export const knob = {
       return this.mapOutput(this.internalValue)
     }
   },
-  filters: {
-    round(val) {
-      return val.toFixed(1);
-    }
-  },
   methods: {
+    assign() {
+      if (this.controller) {
+        this.$bus.$off(this.controller, this.react);
+        this.$bus.$emit('connectFrom/'+this.controller);
+      }
+      this.controller = this.$bus.assign.id;
+      this.$bus.$emit('connectFrom/'+this.controller, this.id);
+      this.$bus.$on('knob/'+this.controller, this.react);
+      this.$bus.assigning=false;
+    },
+    react(ev) {
+      this.internalValue = ev*100
+      this.outputValue(this.output)
+    },
     outputValue(val) {
       if (this.signal) {
         this.signal.targetRampTo(val,1);

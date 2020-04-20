@@ -1,13 +1,11 @@
-const LFO = new Tone.LFO();
-
 export const lfo = {
   title:'LFO',
   name:'lfo',
   props: ['id','ch'],
   data() {
     return {
-      options: LFO.get(),
-      lfo: LFO,
+      options: new Tone.LFO().get(),
+      lfo: new Tone.LFO(),
       meter: new Tone.DCMeter(),
       level:0,
       play:false,
@@ -16,13 +14,21 @@ export const lfo = {
   template:`
     <section class="row">
       <toggle v-model="play"></toggle>
-      <knob v-model="options.frequency" :signal="lfo.frequency" :step="0.1" :min="0.1" :max="30">FREQ</knob>
-      <knob v-model="level" :step="0.1" :min="0" :max="1">LFO</knob>
+      <knob :id="id" v-model="options.frequency" :signal="lfo.frequency" :step="0.01" :min="0.01" :max="6">FREQ</knob>
+      <knob :id="id" v-model="options.amplitude" :signal="lfo.amplitude" :step="0.01" :min="0" :max="1">AMP</knob>
+      <knob :id="id" v-model="lfo.phase" :step="1" :min="0" :max="360">phase</knob>
+      <dc-meter :id="id" :value="level"></dc-meter>
     </section>
   `,
   watch: {
     play(val) {
-      val ? this.lfo.start() : this.lfo.stop();
+      if (val) {
+        this.lfo.start();
+        this.setLevel();
+      } else {
+        this.lfo.stop();
+        this.level=this.meter.getValue();
+      }
     }
   },
   mounted() {
@@ -32,7 +38,9 @@ export const lfo = {
   methods: {
     setLevel(level) {
       this.level=this.meter.getValue();
-      requestAnimationFrame(this.setLevel)
+      if (this.play) {
+        requestAnimationFrame(this.setLevel)
+      }
     }
   },
 }
