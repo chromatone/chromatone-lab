@@ -23,14 +23,14 @@ export const sourcesChannel = {
         &#9776;
         <h3  @click="show=!show">{{title.toUpperCase()}}</h3>
       </span>
-      <knob v-if="group=='effects'" v-model="receiveLevel">RECEIVE</knob>
-      <knob v-model="volume">VOL</knob>
+      <knob v-if="group=='effects'" v-model="receiveLevel" :volume="receiver.volume">RECEIVE</knob>
+      <knob v-model="volume" :volume="channel.volume">VOL</knob>
       <knob v-model="channel.pan.value" :min="-1" >PAN</knob>
 
 
       <div v-if="Object.entries(sends).length>0" class="button-group">
         <span class="title" >SENDS</span>
-        <knob v-model="sendLevel">ALL</knob>
+        <knob v-model="sendLevel" :volume= "sender.volume">ALL</knob>
         <knob
           v-for="(send, key) in sends" :key="key"
           :color="$color.hex(key)"
@@ -63,8 +63,6 @@ export const sourcesChannel = {
 
     <footer v-if="sendEnabled && receivers.length>0">
 
-
-
     </footer>
 
   </div>
@@ -90,23 +88,9 @@ export const sourcesChannel = {
       return receivers
     }
   },
-  watch: {
-    receiveLevel(val) {
-      this.setVolume('receiver', val)
-    },
-    volume(val) {
-      this.setVolume('channel', val)
-    },
-    sendLevel(val) {
-      this.setVolume('sender', val)
-    },
-  },
   methods: {
     delSend(id) {
       this.$delete(this.sends,id)
-    },
-    setVolume(channel, val) {
-      this[channel].volume.value = Tone.gainToDb(val)
     },
     createChannel(group) {
       let channel = new Tone.Channel();

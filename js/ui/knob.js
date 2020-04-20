@@ -21,6 +21,8 @@ export const knob = {
       type: Number,
       default:'',
     },
+    signal:Object,
+    volume:Object,
     color:String,
   },
   template: `
@@ -30,7 +32,7 @@ export const knob = {
     @touchstart.prevent="activate"
     @dblclick="reset()"
     class="knob">
-    <div class="num">{{value | round}}</div>
+    <div class="num">{{output | round}}</div>
     <div class="info">
       <slot></slot>
     </div>
@@ -55,12 +57,28 @@ export const knob = {
       this.internalValue = this.mapInput(newVal)
     }
   },
+  computed: {
+    output() {
+      return this.mapOutput(this.internalValue)
+    }
+  },
   filters: {
     round(val) {
       return val.toFixed(1);
     }
   },
   methods: {
+    outputValue(val) {
+      if (this.signal) {
+        this.signal.targetRampTo(val,1);
+        return
+      };
+      if (this.volume) {
+        this.volume.targetRampTo(Tone.gainToDb(val),1);
+        return
+      };
+      this.$emit('input', val)
+    },
     mouseDown(ev) {
 			this.initialX=ev.pageX;
 			this.initialY=ev.pageY;
@@ -77,7 +95,7 @@ export const knob = {
       if (this.internalValue > 100) this.internalValue = 100;
       if (this.internalValue < 0) this.internalValue = 0;
       if (isNaN(this.internalValue)) this.internalValue = this.initialDragValue;
-      this.$emit( "input", this.mapOutput(this.internalValue) );
+      this.outputValue(this.output);
 		},
 		mouseUp(ev){
 			document.onmouseup = undefined;
@@ -86,7 +104,7 @@ export const knob = {
 		},
     reset() {
       this.internalValue=this.initialValue;
-      this.$emit("input", this.mapOutput(this.internalValue) );
+      this.outputValue(this.output);
     },
     mapInput(value) {
       return mapNumber(value, this.min, this.max, 0, 100, this.step)
@@ -117,7 +135,7 @@ export const knob = {
       if (this.internalValue > 100) this.internalValue = 100;
       if (this.internalValue < 0) this.internalValue = 0;
       if (isNaN(this.internalValue)) this.internalValue = this.initialDragValue;
-      this.$emit( "input", this.mapOutput(this.internalValue) );
+      this.outputValue(this.output);
     },
     deactivate() {
       document.removeEventListener("touchmove", this.dragHandler);

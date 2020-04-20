@@ -2,64 +2,33 @@
 // https://tonejs.github.io/docs/13.8.25/AMSynth#modulation
 // https://tonejs.github.io/docs/14.5.46/AMSynth#modulation
 
+const AMSynth = new Tone.AMSynth()
+
 export const amSynth = {
   title:'AM Synth',
   name:'am-synth',
   props:['id','ch'],
   data() {
     return {
-      options:  {
-        harmonicity : 3 ,
-        detune : 0 ,
-        oscillator : {
-          type : 'sine'
-        },
-        envelope : {
-          attack : 0.01 ,
-          decay : 0.01 ,
-          sustain : 1 ,
-          release : 0.5,
-        },
-        modulation : {
-          type : 'square'
-        },
-        modulationEnvelope : {
-          attack : 0.5 ,
-          decay : 0 ,
-          sustain : 1 ,
-          release : 0.5,
-        }
-      },
+      options:  AMSynth.get(),
       types: {
         pulse: 'pulse',
         fatcustom: 'fat',
         white: 'white'
       },
       active: false,
-      synth: new Tone.NoiseSynth(),
+      synth: AMSynth,
       send: {},
     }
   },
   template: `
-    <div class="noise-generator row">
+    <div class="am-synth row">
+      <trigger :inId="id" :activated="active" @attack="attack()" @release="release()"> </trigger>
+      <toggle v-model="active"></toggle>
+      <knob v-model="options.harmonicity" :signal="synth.harmonicity" :step="0.001" :min="0.125" :max="8">Harm</knob>
+      {{options}}
 
-      <toggle v-model="active">Noise</toggle>
 
-      <choice v-model="synth.noise.type" :options="types">Noise type</choice>
-
-      <knob v-model="synth.noise.playbackRate" unit="" :step="0.005" :min="0.1" :max="4">speed</knob>
-
-      <div class="button-group">
-        <span class="title">Envelope</span>
-        <knob v-model="synth.envelope.attack"
-          :min="0.005" :max="4">A</knob>
-        <knob v-model="synth.envelope.decay"
-          :min="0.001" :max="6">D</knob>
-        <knob v-model="synth.envelope.sustain"
-          :min="0.001" :max="1">S</knob>
-        <knob v-model="synth.envelope.release"
-          :min="0.001" :max="50">R</knob>
-      </div>
 
     </div>
   `,
@@ -67,19 +36,29 @@ export const amSynth = {
     this.synth.set(this.options);
     this.synth.connect(this.ch.channel);
     this.synth.connect(this.ch.sender);
-    this.$root.$on('control', trigger);
   },
   methods: {
-    trigger(message) {
-      console.log('message')
-      this.active = !this.active;
+    attack() {
+      this.$resume();
+      this.active=true;
+      this.synth.triggerAttack('C2');
+    },
+    release() {
+      this.active=false;
+      this.synth.triggerRelease();
     }
   },
   watch: {
+    options: {
+      deep:true,
+      handler(val) {
+        this.synth.set(val)
+      }
+    },
     active(val) {
       if (val) {
         this.$resume();
-        this.synth.triggerAttack();
+        this.synth.triggerAttack('C2');
       } else {
         this.synth.triggerRelease();
       }
