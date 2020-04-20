@@ -32,7 +32,7 @@ export const effectsChannel = {
         <knob :id="id" v-model="sendLevel" :volume= "sender.volume">ALL</knob>
         <knob
           v-for="(send, key) in sends" :key="key"
-          :color="$color.hex(key)"
+          :sendColor="$color.hex(key)"
           v-model="send._gainNode.gain.value" :step="0.01" :min="0" :max="1">{{send.title}}</knob>
       </div>
       <toggle

@@ -20,6 +20,7 @@ export const knob = {
     id: String,
     signal:Object,
     volume:Object,
+    sendColor:String,
   },
   template: `
   <div
@@ -65,12 +66,13 @@ export const knob = {
       return this.mapOutput(this.internalValue)
     },
     color() {
+      if (this.sendColor) {
+        return this.sendColor;
+      }
       if (this.controller) {
         return this.$color.hex(this.controller)
-      } else {
-        return '#eee'
       }
-
+      return '#eee'
     }
   },
   methods: {
