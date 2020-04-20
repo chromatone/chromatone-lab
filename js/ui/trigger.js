@@ -49,15 +49,6 @@ export const trigger = {
   created() {
     this.$bus.$on('connectFrom/'+this.outId, this.connect)
   },
-  watch: {
-    beat(val) {
-      if (val) {
-        this.play();
-      } else {
-        this.stop();
-      }
-    }
-  },
   methods: {
     enter() {
       if(this.$bus.active && !this.active) {
@@ -72,6 +63,7 @@ export const trigger = {
       this.message.action = 'attack';
       this.message.pitch = this.pitch;
       this.message.octave = this.octave;
+      this.message.time=Tone.now();
       this.$emit('attack', this.message)
       if (this.outId) {
         this.$bus.$emit(this.outId,this.message);
@@ -80,6 +72,7 @@ export const trigger = {
     stop() {
       this.active=false;
       this.message.action = 'release'
+      this.message.time=Tone.now();
       this.$emit('release', this.message)
       if (this.outId) {
         this.$bus.$emit(this.outId,this.message);
@@ -156,5 +149,6 @@ export const trigger = {
   },
   beforeDestroy() {
     this.$bus.$off(this.controller, this.react)
+    this.$bus.$off('connectFrom/'+this.outId, this.connect)
   },
 }

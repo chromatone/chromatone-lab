@@ -17,6 +17,7 @@ export const beat = {
         velocity:1,
         type:'trigger',
         action:'attack',
+        time:undefined,
       }
     }
   },
@@ -53,10 +54,10 @@ export const beat = {
   },
   methods: {
     beats(time) {
-      this.beat=!this.beat
+      this.message.time=time;
+      this.beat=!this.beat;
     },
     connect(id) {
-      console.log(id)
       this.controlled = id
     },
     assignFrom() {
