@@ -20,7 +20,6 @@ export const knob = {
     id: String,
     signal:Object,
     volume:Object,
-    color:String,
   },
   template: `
   <div
@@ -37,8 +36,9 @@ export const knob = {
     <div
       @touchstart.stop.prevent="assign()"
       @mousedown.stop.prevent="assign()"
-      v-if="$bus.assigning && $bus.assign.type=='knob' && $bus.assign.id != id"
-      class="assigner blink-to"></div>
+      v-if="$bus.assigning && $bus.assign.id != id && ($bus.assign.type=='knob' || controller)"
+      :class="{'blink-to':$bus.assign.type=='knob', cancel: controller}"
+      class="assigner"></div>
   </div>
   `,
   data() {
@@ -63,17 +63,38 @@ export const knob = {
   computed: {
     output() {
       return this.mapOutput(this.internalValue)
+    },
+    color() {
+      if (this.controller) {
+        return this.$color.hex(this.controller)
+      } else {
+        return '#eee'
+      }
+
     }
   },
   methods: {
     assign() {
+      if (this.$bus.assign.type!='knob' && this.controller) {
+        this.disconnect();
+        return
+      }
       if (this.controller) {
-        this.$bus.$off(this.controller, this.react);
+        this.$bus.$off('knob/'+this.controller, this.react);
         this.$bus.$emit('connectFrom/'+this.controller);
       }
+      this.connect();
+    },
+    connect() {
       this.controller = this.$bus.assign.id;
       this.$bus.$emit('connectFrom/'+this.controller, this.id);
       this.$bus.$on('knob/'+this.controller, this.react);
+      this.$bus.assigning=false;
+    },
+    disconnect() {
+      this.$bus.$off('knob/'+this.controller, this.react);
+      this.$bus.$emit('connectFrom/'+this.controller);
+      this.controller=undefined;
       this.$bus.assigning=false;
     },
     react(ev) {

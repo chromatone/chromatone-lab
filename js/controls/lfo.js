@@ -14,9 +14,9 @@ export const lfo = {
   template:`
     <section class="row">
       <toggle v-model="play"></toggle>
-      <knob :id="id" v-model="options.frequency" :signal="lfo.frequency" :step="0.01" :min="0.01" :max="6">FREQ</knob>
-      <knob :id="id" v-model="options.amplitude" :signal="lfo.amplitude" :step="0.01" :min="0" :max="1">AMP</knob>
-      <knob :id="id" v-model="lfo.phase" :step="1" :min="0" :max="360">phase</knob>
+      <knob :id="id"v-model="options.frequency" :signal="lfo.frequency" :step="0.01" :min="0.01" :max="6">FREQ</knob>
+      <knob :id="id"v-model="options.amplitude" :signal="lfo.amplitude" :step="0.01" :min="0" :max="1">AMP</knob>
+      <knob :id="id"v-model="lfo.phase" :step="1" :min="0" :max="360">phase</knob>
       <dc-meter :id="id" :value="level"></dc-meter>
     </section>
   `,

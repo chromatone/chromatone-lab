@@ -9,8 +9,8 @@ export const autoPanner = {
   <div id="autoPanner" class="row">
 
     <toggle v-model="playing">PANNER</toggle>
-    <knob v-model="panner.frequency.value" param="FREQ" :step="0.1" :min="0.1" :max="30"></knob>
-    <knob v-model="panner.depth.value" param="DEP"  :min="0.1"></knob>
+    <knob :id="id"v-model="panner.frequency.value" param="FREQ" :step="0.1" :min="0.1" :max="30"></knob>
+    <knob :id="id"v-model="panner.depth.value" param="DEP"  :min="0.1"></knob>
 
 </div>
   `,

@@ -24,9 +24,9 @@ export const beat = {
     <section class="row">
       <trigger v-model="beat" :beat="beat" :outId="id"></trigger>
       <toggle v-model="play">Beat</toggle>
-      <knob v-model="transport.bpm.value" :min="30" :max="240" :step="1">BPM</knob>
-      <knob v-model="loop.playbackRate" :min="1" :max="8" :step="1">Rate</knob>
-      <knob v-model="loop.probability" :min="0" :max="1" :step="0.01">chance</knob>
+      <knob :id="id"v-model="transport.bpm.value" :min="30" :max="240" :step="1">BPM</knob>
+      <knob :id="id"v-model="loop.playbackRate" :min="1" :max="8" :step="1">Rate</knob>
+      <knob :id="id"v-model="loop.probability" :min="0" :max="1" :step="0.01">chance</knob>
     </section>
   `,
   created() {

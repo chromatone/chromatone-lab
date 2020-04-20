@@ -18,18 +18,18 @@ export const membrane = {
 
       <toggle assignable v-model="active"></toggle>
 
-      <knob v-model="synth.octaves" :step="0.5" :min="0" :max="12">octaves</knob>
-      <knob v-model="synth.pitchDecay" :step="0.005" :min="0.001" :max="0.2">decay</knob>
+      <knob :id="id"v-model="synth.octaves" :step="0.5" :min="0" :max="12">octaves</knob>
+      <knob :id="id"v-model="synth.pitchDecay" :step="0.005" :min="0.001" :max="0.2">decay</knob>
 
       <div class="button-group">
         <span class="title">Envelope</span>
-        <knob v-model="synth.envelope.attack"
+        <knob :id="id"v-model="synth.envelope.attack"
           :min="0.005" :step="0.01" :max="1">A</knob>
-        <knob v-model="synth.envelope.decay"
+        <knob :id="id"v-model="synth.envelope.decay"
           :min="0.005" :max="6">D</knob>
-        <knob v-model="synth.envelope.sustain"
+        <knob :id="id"v-model="synth.envelope.sustain"
           :min="0.005" :max="1">S</knob>
-        <knob v-model="synth.envelope.release"
+        <knob :id="id"v-model="synth.envelope.release"
           :min="0.005" :max="50">R</knob>
       </div>
 

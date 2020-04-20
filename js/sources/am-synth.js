@@ -25,7 +25,7 @@ export const amSynth = {
     <div class="am-synth row">
       <trigger :inId="id" :activated="active" @attack="attack()" @release="release()"> </trigger>
       <toggle v-model="active"></toggle>
-      <knob v-model="options.harmonicity" :signal="synth.harmonicity" :step="0.001" :min="0.125" :max="8">Harm</knob>
+      <knob :id="id"v-model="options.harmonicity" :signal="synth.harmonicity" :step="0.001" :min="0.125" :max="8">Harm</knob>
       {{options}}
 
 

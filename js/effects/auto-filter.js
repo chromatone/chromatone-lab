@@ -32,19 +32,19 @@ export const autoFilter = {
   template: `
       <div id="autoFilter" class="row">
 
-        <knob v-model="filter.baseFrequency" :step="1" :min="10" :max="1000">FREQ</knob>
-        <knob v-model="filter.octaves" :min="0.1" :max="7">OCT</knob>
-        <knob v-model="filter.filter.Q.value"  :max="10">Q</knob>
-        <knob v-model="filter.wet.value">WET</knob>
+        <knob :id="id"v-model="filter.baseFrequency" :step="1" :min="10" :max="1000">FREQ</knob>
+        <knob :id="id"v-model="filter.octaves" :min="0.1" :max="7">OCT</knob>
+        <knob :id="id"v-model="filter.filter.Q.value"  :max="10">Q</knob>
+        <knob :id="id"v-model="filter.wet.value">WET</knob>
 
         <choice v-model="filter.filter.type"
           :options="types">Noise type</choice>
 
         <toggle v-model="playing">PLAY</toggle>
 
-        <knob v-model="filter.depth.value">DEP</knob>
+        <knob :id="id"v-model="filter.depth.value">DEP</knob>
 
-        <knob v-model="filter.frequency.value" :min="0.1" :max="60">RATE</knob>
+        <knob :id="id"v-model="filter.frequency.value" :min="0.1" :max="60">RATE</knob>
 
     </div>
   `,
