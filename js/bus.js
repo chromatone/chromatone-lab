@@ -44,6 +44,9 @@ Vue.prototype.$resume = () => {
   if (Tone.context.state == "suspended") {
     Tone.context.resume();
   }
+  if (Tone.Transport.state != "started") {
+    Tone.Transport.start();
+  }
 }
 
 Vue.prototype.$hash = () => {

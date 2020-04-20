@@ -22,23 +22,13 @@ export const noiseGenerator = {
 
       <trigger :inId="id" :activated="active" @attack="attack" @release="release"> </trigger>
 
-      <toggle v-model="active"></toggle>
+      <toggle v-model="active" @attack="attack" @release="release"></toggle>
 
       <choice v-model="synth.noise.type" :options="types">Noise type</choice>
 
-      <knob :id="id"v-model="synth.noise.playbackRate" unit="" :step="0.005" :min="0.1" :max="4">speed</knob>
+      <knob :id="id" v-model="synth.noise.playbackRate" unit="" :step="0.005" :min="0.1" :max="4">speed</knob>
 
-      <div class="button-group">
-        <span class="title">Envelope</span>
-        <knob :id="id"v-model="synth.envelope.attack"
-          :min="0.005" :max="4">A</knob>
-        <knob :id="id"v-model="synth.envelope.decay"
-          :min="0.001" :max="6">D</knob>
-        <knob :id="id"v-model="synth.envelope.sustain"
-          :min="0.001" :max="1">S</knob>
-        <knob :id="id"v-model="synth.envelope.release"
-          :min="0.001" :max="50">R</knob>
-      </div>
+      <envelope :id="id" v-model="synth.envelope"></envelope>
 
     </div>
   `,
@@ -53,17 +43,9 @@ export const noiseGenerator = {
       this.synth.triggerAttack(val.time);
     },
     release(val) {
+      this.active=false;
       this.synth.triggerRelease(val.time);
     }
-  },
-  watch: {
-    active(val) {
-      if (val) {
-        this.attack({time:Tone.now()});
-      } else {
-        this.release({time:Tone.now()});
-      }
-    },
   },
   beforeDestroy() {
     this.synth.triggerRelease();

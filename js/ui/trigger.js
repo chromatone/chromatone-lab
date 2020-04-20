@@ -3,7 +3,6 @@ export const trigger = {
   props: {
     inId: String,
     outId: String,
-    beat:false,
     activated: Boolean,
     pitch: Number,
     octave: {

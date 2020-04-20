@@ -23,13 +23,13 @@ export const effectsChannel = {
         &#9776;
         <h3  @click="show=!show">{{title.toUpperCase()}}</h3>
       </span>
-      <knob :id="id"v-if="group=='effects'" v-model="receiveLevel" :volume= "receiver.volume">RECEIVE</knob>
-      <knob :id="id"v-model="volume" :volume= "channel.volume">VOL</knob>
-      <knob :id="id"v-model="channel.pan.value" :signal="channel.pan" :min="-1" >PAN</knob>
+      <knob :id="id" v-if="group=='effects'" v-model="receiveLevel" :volume= "receiver.volume">RECEIVE</knob>
+      <knob :id="id" v-model="volume" :volume= "channel.volume">VOL</knob>
+      <knob :id="id" v-model="channel.pan.value" :signal="channel.pan" :min="-1" >PAN</knob>
 
       <div v-if="Object.entries(sends).length>0" class="button-group">
         <span class="title" >SENDS</span>
-        <knob :id="id"v-model="sendLevel" :volume= "sender.volume">ALL</knob>
+        <knob :id="id" v-model="sendLevel" :volume= "sender.volume">ALL</knob>
         <knob
           v-for="(send, key) in sends" :key="key"
           :color="$color.hex(key)"

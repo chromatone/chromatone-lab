@@ -19,6 +19,11 @@ export const toggle = {
   },
   methods: {
     press() {
+      if (!this.value) {
+        this.$emit('attack',{time:Tone.now()})
+      } else {
+        this.$emit('release',{time:Tone.now()})
+      }
       this.$emit('input', !this.value);
     }
   },

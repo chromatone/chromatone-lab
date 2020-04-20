@@ -19,17 +19,17 @@ export const amSynth = {
       active: false,
       synth: AMSynth,
       send: {},
+      note:'C2',
     }
   },
   template: `
     <div class="am-synth row">
-      <trigger :inId="id" :activated="active" @attack="attack()" @release="release()"> </trigger>
-      <toggle v-model="active"></toggle>
-      <knob :id="id"v-model="options.harmonicity" :signal="synth.harmonicity" :step="0.001" :min="0.125" :max="8">Harm</knob>
+      <trigger :inId="id" :activated="active" @attack="attack" @release="release"> </trigger>
+      <toggle v-model="active" @attack="attack" @release="release"></toggle>
+      <knob :id="id" v-model="options.harmonicity" :signal="synth.harmonicity" :step="0.001" :min="0.125" :max="8">Harm</knob>
+      <envelope :id="id" v-model="synth.envelope">main</envelope>
+      <envelope :id="id" v-model="synth.modulationEnvelope">modulation</envelope>
       {{options}}
-
-
-
     </div>
   `,
   mounted() {
@@ -38,31 +38,14 @@ export const amSynth = {
     this.synth.connect(this.ch.sender);
   },
   methods: {
-    attack() {
+    attack(msg) {
       this.$resume();
-      this.active=true;
       this.synth.triggerAttack('C2');
     },
-    release() {
+    release(msg) {
       this.active=false;
       this.synth.triggerRelease();
     }
-  },
-  watch: {
-    options: {
-      deep:true,
-      handler(val) {
-        this.synth.set(val)
-      }
-    },
-    active(val) {
-      if (val) {
-        this.$resume();
-        this.synth.triggerAttack('C2');
-      } else {
-        this.synth.triggerRelease();
-      }
-    },
   },
   beforeDestroy() {
     this.synth.triggerRelease();

@@ -16,7 +16,7 @@ export const bitCrusher = {
   template: `
   <div class="bitCrusher row" >
 
-      <knob :id="id"v-model="crusher.bits.value" :step="1" :min="1" :max="16">BITS</knob>
+      <knob :id="id" v-model="crusher.bits.value" :step="1" :min="1" :max="16">BITS</knob>
 
   </div>
   `,
