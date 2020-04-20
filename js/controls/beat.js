@@ -26,6 +26,7 @@ export const beat = {
       <trigger v-model="beat" :activated="beat" :outId="id"></trigger>
       <toggle v-model="play">Beat</toggle>
       <toggle v-model="loop.mute">mute</toggle>
+      <toggle v-model="loop.humanize">human</toggle>
       <knob :id="id" v-model="transport.bpm.value" :min="30" :max="240" :step="1">BPM</knob>
       <knob :id="id" v-model="loop.playbackRate" :min="1" :max="8" :step="0.1">Rate</knob>
       <knob :id="id" v-model="loop.probability" :min="0" :max="1" :step="0.01">chance</knob>
