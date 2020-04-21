@@ -10,10 +10,10 @@
 .button-group:before {
   content:'';
   position:absolute;
-  width:80%;
-  height:2px;
+  width:90%;
+  height:1px;
   left: 50%;
-  top: 5px;
+  top: 4px;
   transform: translate(-50%,-50%);
   background: hsla(0,0%,0%,0.33);
 }
@@ -28,7 +28,7 @@
   transform:translateX(-50%);
   padding:4px 4px 2px 4px;
   border-radius: 6px;
-  font-size:9px;
+  font-size:8px;
   font-weight:bold;
 }
 

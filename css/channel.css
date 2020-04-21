@@ -9,6 +9,7 @@
 }
 .channel header {
     flex:1 1 100%;
+    padding: 0 0 4px 0;
 }
 
 .channel footer {
@@ -21,7 +22,7 @@
 }
 
 .channel header, .channel footer {
-  padding: 0;
+
   display: flex;
   flex-flow: row wrap;
   align-items: center;
