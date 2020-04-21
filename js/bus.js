@@ -1,5 +1,3 @@
-const mixin = {}
-
 Vue.prototype.$bus = new Vue({  // CONTROL BUS
   el:"#bus",
   data: {
@@ -8,6 +6,7 @@ Vue.prototype.$bus = new Vue({  // CONTROL BUS
     assign:{},
     assigning:false,
     active:false,
+    shiftPressed:false,
   },
   watch: {
     assigning(val) {
@@ -15,6 +14,22 @@ Vue.prototype.$bus = new Vue({  // CONTROL BUS
         this.assign = {}
       }
     }
+  },
+  methods: {
+    pressed(e) {
+      if (e.key == "Shift") this.shiftPressed = true;
+    },
+    unpressed(e) {
+      if (e.key == "Shift") this.shiftPressed = false;
+    }
+  },
+  created() {
+    document.addEventListener("keydown", this.pressed);
+    document.addEventListener("keyup", this.unpressd);
+  },
+  beforeDestroy() {
+    document.removeEventListener('keydown', this.pressed)
+    document.removeEventListener('keyup', this.unpressed)
   },
 });
 
@@ -26,29 +41,3 @@ Vue.prototype.$ch = new Vue({  // AUDIO BUS
     receivers:{},
   }
 });
-
-Vue.prototype.$noteFreq =  (pitch=0, octave = 3) => {
-    return Number(440 * Math.pow(2, octave - 4 + pitch / 12));
-}
-
-Vue.prototype.$noteColor = (pitch, octave = 3) => {
-  return `hsla(${pitch*30},100%,${(octave+5)*8}%,1)`
-}
-
-Vue.prototype.$color = new ColorHash({
-  saturation:[0.25, 0.35, 0.5],
-  lightness: [0.65, 0.75, 0.85]
-});
-
-Vue.prototype.$resume = () => {
-  if (Tone.context.state == "suspended") {
-    Tone.context.resume();
-  }
-  if (Tone.Transport.state != "started") {
-    Tone.Transport.start();
-  }
-}
-
-Vue.prototype.$hash = () => {
-  return String(Math.floor( Math.random() * Date.now()));
-}

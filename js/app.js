@@ -1,5 +1,6 @@
 import channels from './channels/channels.js'
 import * as ui from './ui/all.js'
+import './utility.js'
 import './bus.js'
 
 Object.entries(ui).forEach((el) => {
@@ -12,7 +13,6 @@ const app = new Vue({
     channels,
   },
   data: {
-    
-  },
 
+  },
 })

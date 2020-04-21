@@ -1,5 +1,5 @@
 
-export const knob = {
+export const noteKnob = {
   props: {
     value:{
       type: Number,
