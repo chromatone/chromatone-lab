@@ -79,6 +79,10 @@ button.trigger {
   min-width:28px;
 }
 
+button.trigger .assigner.cancel {
+  border-color:red;
+}
+
 button.toggle {
   display:flex;
   align-items: center;

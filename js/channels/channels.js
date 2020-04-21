@@ -37,11 +37,6 @@ export default {
           </button>
         </transition-group>
         <div class="spacer"></div>
-        <toggle name="Assign"
-          v-if="group=='controls' && activeChannels.length>0"
-          v-model="$bus.assigning"
-          :id="$bus.assign.id"
-          ></toggle>
       </header>
 
       <draggable class="container" v-if="activeChannels.length>0" v-model="activeChannels" handle=".handle">

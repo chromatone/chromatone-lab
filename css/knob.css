@@ -3,15 +3,28 @@
   cursor: pointer;
   z-index:4;
   max-width:min-content;
-  border:2px solid hsla(0,0%,0%,0.4);
-  border-radius: 8px;
+  border:0px solid hsla(0,0%,0%,0.4);
+  border-radius: 6px;
   font-size:1em;
   margin:4px;
   min-height:2em;
   display: flex;
   flex-flow: row wrap;
   align-items: center;
-  box-shadow: inset 0px -2px 2px 0 hsla(0,0%,100%,0.63), inset 0px 2px 2px 0 hsla(208, 6%, 60%, 0.5);
+
+}
+
+.knob::before {
+    content: '';
+    position: absolute;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+    border-bottom: 1px solid hsla(0,0%,100%,0.2);
+    top: -3px;
+    left: -2px;
+    border-radius: 6px;
+    transition: all 50ms;
+    box-shadow:  inset 0px 1px 3px 0 hsla(208, 6%, 0%, 0.4), inset 0px -1px 3px 0 hsla(0,0%,100%,0.53);
 }
 
 .knob .info {
@@ -28,13 +41,13 @@
 
 .knob .value {
   background-color: hsla(0,0%,95%,1);
-  border:2px solid hsla(0,0%,0%,0.4);
-  left:-2px;
+  border:0px solid hsla(0,0%,0%,0.4);
+  left:-1px;
   z-index:-10;
   position: absolute;
-  border-radius:6px;
+  border-radius:3px;
   width:100%;
-  bottom:0;
+  bottom:1px;
 }
 
 .knob.active .num {

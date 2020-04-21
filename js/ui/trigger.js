@@ -40,7 +40,7 @@ export const trigger = {
          @mousedown.stop.prevent="startAssign()"
          v-if="$bus.assigning && (inId || outId)"
          :style="{backgroundColor:outerColor || innerColor}"
-         :class="{'blink-to': $bus.assign.id && $bus.assign.type == 'trigger' && inId,'blink-from':$bus.assign==message}"
+         :class="{'blink-to': $bus.assign.id && $bus.assign.type == 'trigger' && inId,'blink-from':$bus.assign==message, cancel: controller}"
          class="assigner">
        </div>
     </button>
@@ -99,6 +99,10 @@ export const trigger = {
         this.assignFrom(); return }
     },
     assignTo() {
+      if (this.$bus.assign.type!='trigger' && this.controller) {
+        this.disconnect();
+        return
+      }
       if (this.$bus.assign.type=='trigger') {
         this.$bus.$off(this.controller, this.react);
         this.$bus.$emit('connectFrom/'+this.controller);
@@ -118,11 +122,19 @@ export const trigger = {
     react(val) {
       if (val.action && val.action=='attack') {
         this.note = val;
+        this.active=true;
       } else {
+        this.active=false;
         this.note = undefined;
       }
       this.$emit(val.action, val)
-    }
+    },
+    disconnect() {
+      this.$bus.$off(this.controller, this.react);
+      this.$bus.$emit('connectFrom/'+this.controller);
+      this.controller=undefined;
+      this.$bus.assigning=false;
+    },
   },
   computed: {
     outerColor() {
