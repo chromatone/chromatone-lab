@@ -38,13 +38,17 @@ export const noiseGenerator = {
     this.synth.connect(this.ch.sender);
   },
   methods: {
-    attack(val) {
+    attack(msg) {
       this.$resume();
-      this.synth.triggerAttack(val.time);
+      if (msg.duration) {
+        this.synth.triggerAttackRelease(msg.duration,msg.time);
+        return
+      }
+      this.synth.triggerAttack(msg.time);
     },
-    release(val) {
+    release(msg) {
       this.active=false;
-      this.synth.triggerRelease(val.time);
+      this.synth.triggerRelease(msg.time);
     }
   },
   beforeDestroy() {
