@@ -37,8 +37,6 @@
   color:#555;
   border:2px solid transparent;
   background: none;
-  box-shadow:none;
-    box-shadow:  0px 0px 0px 0 hsla(0,0%,100%,0.63), 0px 0px 0px 0 hsla(208, 6%, 60%, 0.5);
 }
 
 .button-group button.active  {
