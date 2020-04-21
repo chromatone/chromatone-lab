@@ -3,12 +3,14 @@ export const toggle = {
   props: {
     value: Boolean,
     id:String,
+    name:String,
   },
   template:`
     <button class="toggle"
       :class="{active:value, 'blink-to': $bus.assign.type=='toggle'}"
       :style="{backgroundColor:bgColor}"
-      @click="press()"><div class="toggler"><slot></slot></div></button>
+      @touchstart.stop.prevent="press()"
+      @mousedown.stop.prevent="press()"><div class="led"></div><span v-if="name">{{name}}</span></button>
   `,
   computed: {
     bgColor() {

@@ -35,9 +35,8 @@ export const effectsChannel = {
           :sendColor="$color.hex(key)"
           v-model="send._gainNode.gain.value" :step="0.01" :min="0" :max="1">{{send.title}}</knob>
       </div>
-      <toggle
+      <toggle name="sends"
         v-model="addSend">
-        + SEND
       </toggle>
       <div class="button-group" v-if="addSend && Object.entries(receivers).length>0">
         <span class="title">Add</span>

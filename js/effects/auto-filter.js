@@ -40,7 +40,7 @@ export const autoFilter = {
         <choice v-model="filter.filter.type"
           :options="types">Noise type</choice>
 
-        <toggle v-model="playing">PLAY</toggle>
+        <toggle name="play" v-model="playing"></toggle>
 
         <knob :id="id" v-model="filter.depth.value">DEP</knob>
 

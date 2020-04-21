@@ -4,8 +4,8 @@ export const audioIn = {
   props:['id','ch'],
   template: `
     <div class="audio-in row">
-      <trigger :inId="id" @attack="active=true" @release="active=false"></trigger>
-      <toggle v-model="active" v-if="open">INPUT</toggle>
+      <trigger :inId="id" @attack="active=true" @release="active=false" v-if="open"></trigger>
+      <toggle name="input" v-model="active" v-if="open"></toggle>
     </div>
   `,
   data() {

@@ -33,14 +33,13 @@
 }
 
 .button-group button  {
-  margin:6px 0 2px 0;
+  margin:6px 4px 2px 4px;
   color:#555;
   border:2px solid transparent;
   background: none;
 }
 
 .button-group button.active  {
-  margin:6px 0 2px 0;
   color:#333;
   border:2px solid #888;
   background: hsla(0,0%,100%,1);
