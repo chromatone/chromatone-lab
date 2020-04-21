@@ -48,10 +48,13 @@ export const amSynth = {
       if (msg.pitch && msg.octave) {
         freq = this.$noteFreq(msg.pitch,msg.octave)
       }
+      if (msg.duration) {
+        this.synth.triggerAttackRelease(freq,msg.duration,msg.time);
+        return
+      }
       this.synth.triggerAttack(freq);
     },
     release(msg) {
-      this.active=false;
       this.synth.triggerRelease();
     }
   },

@@ -8,7 +8,8 @@ export const membrane = {
       options: new Tone.MembraneSynth().get(),
       active: false,
       synth: new Tone.MembraneSynth(),
-      send: {},
+      pitch:0,
+      octave:1,
     }
   },
   template: `
@@ -30,11 +31,22 @@ export const membrane = {
     this.synth.connect(this.ch.channel);
     this.synth.connect(this.ch.sender);
   },
+  computed: {
+    freq() {
+      return this.$noteFreq(this.pitch,this.octave);
+    }
+  },
   methods: {
     attack(msg) {
-      if (!msg) {return}
-      let freq = this.$noteFreq(msg.pitch || 0,msg.octave ||1)
       this.$resume();
+      let freq = this.freq
+      if (msg.pitch && msg.octave) {
+        freq = this.$noteFreq(msg.pitch,msg.octave)
+      }
+      if (msg.duration) {
+        this.synth.triggerAttackRelease(freq,msg.duration,msg.time);
+        return
+      }
       this.synth.triggerAttack(freq, msg.time);
     },
     release(msg) {

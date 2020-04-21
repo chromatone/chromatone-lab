@@ -11,13 +11,15 @@ export const beat = {
       controlled:undefined,
       transport: Tone.Transport,
       position:'',
-      loop: new Tone.Loop(this.beats, "4n"),
+      interval:'1m',
+      loop: new Tone.Loop(this.beats, '2n'),
       message: {
         id: this.id,
         velocity:1,
         type:'trigger',
         action:'attack',
         time:undefined,
+        duration:'16n',
       }
     }
   },
@@ -68,7 +70,10 @@ export const beat = {
   methods: {
     beats(time) {
       this.message.time=time;
-      this.beat=!this.beat;
+      this.beat=true;
+      Tone.Draw.schedule(() => {
+        this.beat=false
+      }, '+'+this.message.duration)
     },
     connect(id) {
       this.controlled = id
