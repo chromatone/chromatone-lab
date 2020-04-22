@@ -1,7 +1,6 @@
-export const noiseGenerator = {
+export const noiseSynth= {
   title:'Noise',
-  name:'noise-generator',
-
+  name:'noise-synth',
   props:['id','ch'],
   data() {
     return {
