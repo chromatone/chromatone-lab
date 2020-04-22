@@ -1,3 +1,5 @@
+import assigner from './knob-assigner.js'
+
 
 export const knob = {
   props: {
@@ -26,26 +28,9 @@ export const knob = {
     volume:Object,
     sendColor:String,
   },
-  template: `
-  <div
-    :class="{active:active}"
-    @mousedown.stop.prevent="mouseDown"
-    @touchstart.stop.prevent="activate"
-    @dblclick="reset()"
-    class="knob">
-    <div class="num">{{output.toFixed(accuracy)}}</div>
-    <div class="info">
-      <slot></slot>
-    </div>
-    <div class="value" :style="{height:intValue+'%', backgroundColor:color}"></div>
-    <div
-      @touchstart.stop.prevent="assign()"
-      @mousedown.stop.prevent="assign()"
-      v-if="$bus.assigning && $bus.assign.id != id && ($bus.assign.type=='knob' || controller)"
-      :class="{'blink-to':$bus.assign.type=='knob', cancel: controller}"
-      class="assigner"></div>
-  </div>
-  `,
+  components: {
+    assigner
+  },
   data() {
     return {
       intValue: this.mapInput(this.value),
@@ -59,6 +44,26 @@ export const knob = {
       diff:2,
     };
   },
+  template: `
+  <div
+    :class="{active:active}"
+    @mousedown.stop.prevent="mouseDown"
+    @touchstart.stop.prevent="activate"
+    @dblclick="reset()"
+    class="knob">
+    <div class="num">{{output.toFixed(accuracy)}}</div>
+    <div class="info">
+      <slot></slot>
+    </div>
+    <div class="value" :style="{height:intValue+'%', backgroundColor:color}"></div>
+    <assigner
+      :id="id"
+      v-model="controller"
+      @react="react"
+      v-show="$bus.assigning && $bus.assign.id != id && ($bus.assign.type=='knob' || controller)"
+      ></assigner>
+  </div>
+  `,
   watch: {
     value(newVal) {
       this.intValue = this.mapInput(newVal)
@@ -170,29 +175,6 @@ export const knob = {
 
     // INTERCONNECTING WITH ASSIGN
 
-    assign() {
-      if (this.$bus.assign.type!='knob' && this.controller) {
-        this.disconnect();
-        return
-      }
-      if (this.controller) {
-        this.$bus.$off('knob/'+this.controller, this.react);
-        this.$bus.$emit('connectFrom/'+this.controller);
-      }
-      this.connect();
-    },
-    connect() {
-      this.controller = this.$bus.assign.id;
-      this.$bus.$emit('connectFrom/'+this.controller, this.id);
-      this.$bus.$on('knob/'+this.controller, this.react);
-      this.$bus.assigning=false;
-    },
-    disconnect() {
-      this.$bus.$off('knob/'+this.controller, this.react);
-      this.$bus.$emit('connectFrom/'+this.controller);
-      this.controller=undefined;
-      this.$bus.assigning=false;
-    },
     react(ev) {
       this.intValue = ev*100
       this.outputValue(this.output)
