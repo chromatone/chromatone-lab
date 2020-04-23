@@ -2,15 +2,13 @@
 // https://tonejs.github.io/docs/13.8.25/AMSynth#modulation
 // https://tonejs.github.io/docs/14.5.46/AMSynth#modulation
 
-const AMSynth = new Tone.AMSynth()
-
 export const amSynth = {
   title:'AM Synth',
   name:'am-synth',
   props:['id','ch'],
   data() {
     return {
-      options:  AMSynth.get(),
+      options: new Tone.AMSynth().get(),
       osc: {
         sine: 'sine',
         square: 'square',
@@ -18,7 +16,7 @@ export const amSynth = {
         pwm: 'pwm',
       },
       active: false,
-      synth: AMSynth,
+      synth: new Tone.AMSynth(),
       send: {},
       pitch:0,
       octave:3,

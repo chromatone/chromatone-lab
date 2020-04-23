@@ -1,30 +1,37 @@
+import knobControl from './knob-control.js'
+
 
 export const noteKnob = {
   props: {
     value:{
       type: Number,
-      default:1,
-    },
-    min:{
-      type: Number,
       default:0,
     },
-    max:{
-      type: Number,
-      default:1,
-    },
-    step:{
-      type: Number,
-      default:0.01,
-    },
-    accuracy: {
-      type:Number,
-      default:1,
-    },
     id: String,
-    signal:Object,
-    volume:Object,
     sendColor:String,
+  },
+  components: {
+    knobControl
+  },
+  data() {
+    return {
+      pitch:0,
+      output:0,
+      intValue: 0,
+      initValue: 0,
+      active: false,
+      initX: undefined,
+      initY: undefined,
+      initDragValue: undefined,
+      activeTouch:undefined,
+      controller:undefined,
+      diff:10,
+      note:'A',
+      octave:3,
+      prevOctave:3,
+      activated:false,
+      notes:['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'],
+    };
   },
   template: `
   <div
@@ -32,74 +39,45 @@ export const noteKnob = {
     @mousedown.stop.prevent="mouseDown"
     @touchstart.stop.prevent="activate"
     @dblclick="reset()"
-    class="knob">
-    <div class="num">{{output.toFixed(accuracy)}}</div>
-    <div class="info">
-      <slot></slot>
-    </div>
-    <div class="value" :style="{height:intValue+'%', backgroundColor:color}"></div>
-    <div
-      @touchstart.stop.prevent="assign()"
-      @mousedown.stop.prevent="assign()"
-      v-if="$bus.assigning && $bus.assign.id != id && ($bus.assign.type=='knob' || controller)"
-      :class="{'blink-to':$bus.assign.type=='knob', cancel: controller}"
-      class="assigner"></div>
+    class="knob note-knob"
+    :style="{backgroundColor:color}">
+
+    <div class="output">{{note}}{{octave}}</div>
+
+    <div class="value" :style="{height:7.7+intValue*7+'%'}"></div>
+
+    <knob-control
+      :id="id"
+      v-model="controller"
+      @react="react"
+      v-show="$bus.assigning && $bus.assign.id != id && ($bus.assign.type=='knob' || controller)"
+      ></knob-control>
+
   </div>
   `,
-  data() {
-    return {
-      intValue: this.mapInput(this.value),
-      initValue: this.mapInput(this.value),
-      active: false,
-      initX: undefined,
-      initY: undefined,
-      initDragValue: undefined,
-      activeTouch:undefined,
-      controller:undefined,
-      diff:2,
-    };
-  },
-  watch: {
-    value(newVal) {
-      this.intValue = this.mapInput(newVal)
-    },
-    '$bus.shiftPressed'(val) {
-      if (val) {
-        this.diff = 10
-      } else {
-        this.diff = 2
-      }
-    },
-  },
   computed: {
-    output() {
-      return this.mapOutput(this.intValue)
-    },
     color() {
+      return this.$noteColor(this.intValue,this.octave)
+    },
+    bgColor() {
       if (this.sendColor) {
         return this.sendColor;
       }
       if (this.controller) {
         return this.$color.hex(this.controller)
       }
-      return '#eee'
+    }
+  },
+  watch: {
+    intValue(out) {
+      this.note=this.notes[out];
+      this.$emit('input', out)
+    },
+    octave(oct) {
+      this.$emit('octave', this.octave)
     }
   },
   methods: {
-
-    // MAIN OUTPUT FUNCTION
-
-    outputValue(val) {
-      if (this.signal) {
-        this.signal.targetRampTo(val,1);
-        return
-      };
-      if (this.volume) {
-        this.volume.targetRampTo(Tone.gainToDb(val),1);
-        return
-      };
-      this.$emit('input', val)
-    },
 
     // MOUSE EVENT HANDLERS
 
@@ -125,21 +103,24 @@ export const noteKnob = {
 
     change(pageY) {
       let value = this.initDragValue + (this.initY - pageY) / this.diff;
-      if (value > 100) value = 100;
-      if (value < 0) value = 0;
-      if (isNaN(value)) value = this.initDragValue;
-      this.intValue = value;
-      this.outputValue(this.output);
+      this.intValue = this.remainder(value);
+      let octave = value > 0 ? Math.floor(value/12) : Math.ceil(value/12);
+      if (this.prevOctave+octave !=this.octave) {
+        this.prevOctave = this.octave
+        this.octave = this.prevOctave+octave
+      }
     },
     reset() {
       this.intValue=this.initValue;
-      this.outputValue(this.output);
     },
-    mapInput(value) {
-      return mapNumber(value, this.min, this.max, 0, 100, this.step)
-    },
-    mapOutput(value) {
-      return mapNumber(value, 0, 100, this.min, this.max, this.step)
+    remainder(value) {
+      let pitch;
+      if (value >= 0) {
+        pitch = Math.floor(value)%12;
+      } else {
+        pitch = 11+Math.floor(value+1)%12
+      }
+      return pitch
     },
 
     // TOUCH EVENT HANDLERS
@@ -170,41 +151,8 @@ export const noteKnob = {
 
     // INTERCONNECTING WITH ASSIGN
 
-    assign() {
-      if (this.$bus.assign.type!='knob' && this.controller) {
-        this.disconnect();
-        return
-      }
-      if (this.controller) {
-        this.$bus.$off('knob/'+this.controller, this.react);
-        this.$bus.$emit('connectFrom/'+this.controller);
-      }
-      this.connect();
-    },
-    connect() {
-      this.controller = this.$bus.assign.id;
-      this.$bus.$emit('connectFrom/'+this.controller, this.id);
-      this.$bus.$on('knob/'+this.controller, this.react);
-      this.$bus.assigning=false;
-    },
-    disconnect() {
-      this.$bus.$off('knob/'+this.controller, this.react);
-      this.$bus.$emit('connectFrom/'+this.controller);
-      this.controller=undefined;
-      this.$bus.assigning=false;
-    },
     react(ev) {
-      this.intValue = ev*100
-      this.outputValue(this.output)
+      this.intValue = Math.floor(ev*11)
     },
   },
-}
-
-function mapNumber(value, inputmin=0, inputmax=100, rangemin=0, rangemax=100, step=1) {
-  rangemax = parseFloat(rangemax);
-  rangemin = parseFloat(rangemin);
-  inputmax = parseFloat(inputmax);
-  inputmin = parseFloat(inputmin);
-  let result = (value - inputmin) * (rangemax - rangemin) / (inputmax - inputmin) + rangemin;
-  return Math.round(result / step)  * step;
 }

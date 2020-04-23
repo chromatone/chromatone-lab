@@ -13,6 +13,6 @@ const app = new Vue({
     channels,
   },
   data: {
-
+    pitch:0,
   },
 })
