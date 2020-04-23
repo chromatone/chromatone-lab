@@ -1,4 +1,4 @@
-import assigner from './knob-assigner.js'
+import knobControl from './knob-control.js'
 
 
 export const knob = {
@@ -29,7 +29,7 @@ export const knob = {
     sendColor:String,
   },
   components: {
-    assigner
+    knobControl
   },
   data() {
     return {
@@ -56,12 +56,12 @@ export const knob = {
       <slot></slot>
     </div>
     <div class="value" :style="{height:intValue+'%', backgroundColor:color}"></div>
-    <assigner
+    <knob-control
       :id="id"
       v-model="controller"
       @react="react"
       v-show="$bus.assigning && $bus.assign.id != id && ($bus.assign.type=='knob' || controller)"
-      ></assigner>
+      ></knob-control>
   </div>
   `,
   watch: {

@@ -93,6 +93,7 @@ export const sourcesChannel = {
     },
     createChannel(group) {
       let channel = new Tone.Channel();
+      channel.channelCountMode = 'explicit'
       channel.id = this.id;
       channel.group = this.group;
       channel.title = this.title;

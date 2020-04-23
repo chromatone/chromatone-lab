@@ -103,7 +103,8 @@ export const effectsChannel = {
       this.$delete(this.sends,id)
     },
     createChannel(group) {
-      let channel = new Tone.Channel();
+      let channel = new Tone.Channel();      
+      channel.channelCountMode = 'explicit'
       channel.id = this.id;
       channel.group = this.group;
       channel.title = this.title;
