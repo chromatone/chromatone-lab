@@ -27,6 +27,10 @@ export const knob = {
     signal:Object,
     volume:Object,
     sendColor:String,
+    hint:{
+      type:Boolean,
+      default:true,
+    }
   },
   components: {
     knobControl
@@ -51,7 +55,7 @@ export const knob = {
     @touchstart.stop.prevent="activate"
     @dblclick="reset()"
     class="knob">
-    <div class="num">{{output.toFixed(accuracy)}}</div>
+    <div v-if="hint" class="num">{{output.toFixed(accuracy)}}</div>
     <div class="info">
       <slot></slot>
     </div>

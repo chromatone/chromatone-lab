@@ -7,6 +7,7 @@ export const noteKnob = {
       type: Number,
       default:0,
     },
+    octave:Number,
     id: String,
     sendColor:String,
   },
@@ -27,8 +28,7 @@ export const noteKnob = {
       controller:undefined,
       diff:10,
       note:'A',
-      octave:3,
-      prevOctave:3,
+      inOctave:0,
       activated:false,
       notes:['A','A#','B','C','C#','D','D#','E','F','F#','G','G#'],
     };
@@ -41,8 +41,8 @@ export const noteKnob = {
     @dblclick="reset()"
     class="knob note-knob"
     :style="{backgroundColor:color}">
-
-    <div class="output">{{note}}{{octave}}</div>
+    <div class="num">{{frequency}}</div>
+    <div class="output">{{note}}</div>
 
     <div class="value" :style="{height:7.7+intValue*7+'%'}"></div>
 
@@ -66,6 +66,9 @@ export const noteKnob = {
       if (this.controller) {
         return this.$color.hex(this.controller)
       }
+    },
+    frequency() {
+      return this.$noteFreq(this.value,this.octave).toFixed(1)
     }
   },
   watch: {
@@ -73,19 +76,24 @@ export const noteKnob = {
       this.note=this.notes[out];
       this.$emit('input', out)
     },
-    octave(oct) {
-      this.$emit('octave', this.octave)
+    inOctave(oct) {
+      console.log(oct)
     }
   },
   methods: {
+
+    initiate() {
+      this.active = true;
+      this.initDragValue = this.intValue;
+      this.inOctave=0;
+    },
 
     // MOUSE EVENT HANDLERS
 
     mouseDown(ev) {
 			this.initX=ev.pageX;
 			this.initY=ev.pageY;
-      this.active = true;
-      this.initDragValue = this.intValue;
+      this.initiate()
 			document.onmousemove = this.mouseMove;
 			document.onmouseup = this.mouseUp;
 		},
@@ -104,10 +112,9 @@ export const noteKnob = {
     change(pageY) {
       let value = this.initDragValue + (this.initY - pageY) / this.diff;
       this.intValue = this.remainder(value);
-      let octave = value > 0 ? Math.floor(value/12) : Math.ceil(value/12);
-      if (this.prevOctave+octave !=this.octave) {
-        this.prevOctave = this.octave
-        this.octave = this.prevOctave+octave
+      let octChange = value > 0 ? Math.floor(value/12) : Math.ceil(value/12);
+      if (octChange!=this.inOctave) {
+        this.inOctave = octChange
       }
     },
     reset() {
@@ -128,8 +135,7 @@ export const noteKnob = {
     activate(ev) {
       this.activeTouch = ev.changedTouches[0].identifier
       this.initY = ev.changedTouches[0].pageY;
-      this.active = true;
-      this.initDragValue = this.intValue;
+      this.initiate();
       document.addEventListener("touchend", this.deactivate);
       document.addEventListener("touchmove", this.dragHandler);
     },

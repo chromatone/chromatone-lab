@@ -26,8 +26,8 @@
       <img height="22px" src="images/ct-logo.svg" />
       <div class="spacer">
 
-      </div>{{pitch}}
-      <note-knob v-model="pitch"></note-knob>
+      </div>
+      <frequency v-model="frequency"></frequency>
       <toggle name="Assign"
         v-model="$bus.assigning"
         :id="$bus.assign.id"

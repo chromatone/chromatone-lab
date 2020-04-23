@@ -53,7 +53,7 @@
   transition:all 100ms;
 }
 
-.knob.active .num {
+.knob.active .num, .knob:hover .num {
   opacity:1;
   display:block;
 }

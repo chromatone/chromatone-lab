@@ -20,13 +20,14 @@ export const amSynth = {
       send: {},
       pitch:0,
       octave:3,
+      frequency:220,
     }
   },
   template: `
     <div class="am-synth row">
       <trigger :inId="id" :activated="active" @attack="attack" @release="release"> </trigger>
       <toggle v-model="active" @attack="attack" @release="release"></toggle>
-      <note-knob :id="id" v-model="pitch" :max="11" :step="1" :accuracy="0">pitch</note-knob>
+      <frequency v-model="frequency"></frequency>
       <knob :id="id" v-model="options.harmonicity" :signal="synth.harmonicity" :step="0.001" :min="0.125" :max="8">Harm</knob>
       <choice v-model="synth.oscillator.type" :options="osc">oscillator</choice>
       <envelope :id="id" v-model="synth.envelope">osc waveform</envelope>
@@ -42,7 +43,7 @@ export const amSynth = {
   methods: {
     attack(msg) {
       this.$resume();
-      let freq = this.freq
+      let freq = this.frequency
       if (msg.pitch && msg.octave) {
         freq = this.$noteFreq(msg.pitch,msg.octave)
       }
