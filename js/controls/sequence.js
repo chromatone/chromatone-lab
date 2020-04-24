@@ -12,8 +12,21 @@ export const sequence = {
       transport: Tone.Transport,
       position:'',
       interval:'1m',
-      sequence: new Tone.Sequence(),
-      steps:[true,false,false,false,true,false,false,true],
+      sequence: {},
+      stepObj: {
+        pos:0,
+        active:false,
+        pitch:0,
+        octave:3,
+      },
+      options:{
+        subdivision:'8n',
+        events:[],
+      },
+      steps:[],
+      activeStep:0,
+      sequenceLength:8,
+      subdivision:'8n',
       message: {
         id: this.id,
         velocity:1,
@@ -33,15 +46,20 @@ export const sequence = {
       <knob :id="id" v-model="sequence.playbackRate" :min="1" :max="8" :step="0.1">Rate</knob>
       <knob :id="id" v-model="sequence.probability" :min="0" :max="1" :step="0.01">chance</knob>
       <div class="row">
-        <trigger :activated="step" :outId="id" v-for="(step,key) in steps" :key="key"></trigger>
+
+        <button
+          :class="{active:step.pos == activeStep}"
+          v-for="(step,key) in sequence.events" :key="key"
+          @click="act(step)">
+          <div class="dot" :style="{backgroundColor: step.active ? 'grey' : 'transparent'}">
+          </div>
+        </button>
       </div>
     </section>
   `,
   created() {
-    this.$bus.$on('connectFrom/'+this.id, this.connect);
-    this.sequence.events=this.steps;
-    this.sequence.callback = this.beats;
-    this.sequence.start();
+    this.initSequence();
+    this.sequence = new Tone.Sequence(this.beats, this.options.events, this.options.subdivision)
   },
   computed: {
     progress() {
@@ -58,25 +76,20 @@ export const sequence = {
     play(val) {
       this.$resume();
       if (val) {
-        this.sequence.start()
+        this.sequence.start('@1m')
       } else {
         this.sequence.stop();
         this.beat=false;
       }
     },
-    beat(val) {
-      if (val) {
-        this.message.action='attack'
-      } else {
-        this.message.action='release'
-      }
-      this.$bus.$emit(this.id,this.message);
-    },
   },
   methods: {
-    beats(time,val) {
-      this.message.time=time;
-      if (val) {
+    act(step) {
+      step.active = !step.active
+    },
+    beats(time,val,key) {
+      this.activeStep=val.pos;
+      if (val.active) {
         this.beat=true;
         Tone.Draw.schedule(() => {
           this.beat=false
@@ -85,17 +98,12 @@ export const sequence = {
         this.beat=false
       }
     },
-    connect(id) {
-      this.controlled = id
-    },
-    assignFrom() {
-      if (!this.$bus.assigning) {return}
-      if (this.$bus.assign != this.message) {
-        this.$bus.assign = this.message;
-      } else {
-        this.$bus.assign = {}
+    initSequence() {
+      for (let i=0; i<this.sequenceLength; i++) {
+        let step = {...this.stepObj};
+        step.pos=i
+        this.options.events.push(step)
       }
-    },
+    }
   },
-
 }

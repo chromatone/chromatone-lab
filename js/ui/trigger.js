@@ -10,6 +10,7 @@ export const trigger = {
       type:Number,
     },
     value:Boolean,
+    activator: Function,
   },
   data() {
     return {
