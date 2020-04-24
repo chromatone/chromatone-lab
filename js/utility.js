@@ -23,3 +23,7 @@ Vue.prototype.$resume = () => {
 Vue.prototype.$hash = () => {
   return String(Math.floor( Math.random() * Date.now()));
 }
+
+Vue.prototype.$freqToNote = (freq) => {
+  return Tone.Frequency(freq, "hz").toNote();
+}

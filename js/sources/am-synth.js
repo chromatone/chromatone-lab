@@ -18,8 +18,6 @@ export const amSynth = {
       active: false,
       synth: new Tone.AMSynth(),
       send: {},
-      pitch:0,
-      octave:3,
       frequency:220,
     }
   },
@@ -35,11 +33,6 @@ export const amSynth = {
       <envelope :id="id" v-model="synth.modulationEnvelope">modulation</envelope>
     </div>
   `,
-  computed: {
-    freq() {
-      return this.$noteFreq(this.pitch,this.octave);
-    }
-  },
   methods: {
     attack(msg) {
       this.$resume();
@@ -54,7 +47,7 @@ export const amSynth = {
       this.synth.triggerAttack(freq);
     },
     release(msg) {
-      this.synth.triggerRelease();
+      this.synth.triggerRelease(msg.time ||'+0.1');
     }
   },
   mounted() {

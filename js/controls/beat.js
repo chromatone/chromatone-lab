@@ -29,7 +29,7 @@ export const beat = {
       <toggle name="Beat" v-model="play" ></toggle>
       <toggle name="mute" v-model="loop.mute"></toggle>
       <toggle name="human" v-model="loop.humanize"></toggle>
-      <knob :id="id" v-model="transport.bpm.value" :min="30" :max="240" :step="1">BPM</knob>
+  
       <knob :id="id" v-model="loop.playbackRate" :min="1" :max="8" :step="0.1">Rate</knob>
       <knob :id="id" v-model="loop.probability" :min="0" :max="1" :step="0.01">chance</knob>
     </section>
@@ -64,7 +64,7 @@ export const beat = {
       } else {
         this.message.action='release'
       }
-      this.$bus.$emit(this.id,this.message);
+  //    this.$bus.$emit(this.id,this.message);
     },
   },
   methods: {

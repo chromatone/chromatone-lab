@@ -27,7 +27,7 @@
       <div class="spacer">
 
       </div>
-      <frequency v-model="frequency"></frequency>
+      <knob v-model="transport.bpm.value" :min="30" :max="240" :step="1">BPM</knob>
       <toggle name="Assign"
         v-model="$bus.assigning"
         :id="$bus.assign.id"

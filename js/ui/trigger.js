@@ -8,7 +8,8 @@ export const trigger = {
     octave: {
       default:1,
       type:Number,
-    }
+    },
+    value:Boolean,
   },
   data() {
     return {
@@ -47,6 +48,15 @@ export const trigger = {
   `,
   created() {
     this.$bus.$on('connectFrom/'+this.outId, this.connect)
+  },
+  watch: {
+    value(val) {
+      if (val) {
+        this.play()
+      } else {
+        this.stop()
+      }
+    }
   },
   methods: {
     enter() {

@@ -14,5 +14,6 @@ const app = new Vue({
   },
   data: {
     frequency:220,
+    transport: Tone.Transport,
   },
 })

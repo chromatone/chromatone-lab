@@ -2,11 +2,20 @@ export const frequency = {
   name:'frequency',
   props: {
     value:Number,
+    note: {
+      type:Object,
+      default() {
+        return {
+          pitch:0,
+          octave:3,
+        }
+      }
+    }
   },
   data() {
     return {
-      pitch:0,
-      octave:3,
+      pitch: this.note.pitch,
+      octave: this.note.octave,
     }
   },
   template:`
