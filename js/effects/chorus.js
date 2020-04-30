@@ -8,12 +8,7 @@ export const chorus = {
   data() {
     return {
       chorus: new Tone.Chorus(),
-      options: {
-        delayTime:300,
-        depth:1,
-        feedback:0.5,
-        spread:90,
-      }
+      options: new Tone.Chorus().get(),
     }
   },
   template: `

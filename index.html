@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <script src="js/assets/vue.js"></script>
   <script src="js/assets/Tone.js"></script>
-  <!-- https://tonejs.github.io/docs/14.5.44/ -->
+  <!-- https://tonejs.github.io/docs/14.6.4/ -->
   <script src="js/assets/color-hash.js"></script>
   <!-- https://github.com/zenozeng/color-hash -->
   <script src="js/assets/Sortable.min.js"></script>
@@ -27,7 +27,7 @@
       <div class="spacer">
 
       </div>
-      <knob v-model="transport.bpm.value" :min="30" :max="240" :step="1">BPM</knob>
+      <knob  v-model="transport.bpm.value" :min="30" :max="240" :step="1">BPM</knob>
       <toggle name="Assign"
         v-model="$bus.assigning"
         :id="$bus.assign.id"

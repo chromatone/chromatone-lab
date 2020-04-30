@@ -32,12 +32,3 @@ Vue.prototype.$bus = new Vue({  // CONTROL BUS
     document.removeEventListener('keyup', this.unpressed)
   },
 });
-
-Vue.prototype.$ch = new Vue({  // AUDIO BUS
-  data: {
-    sources:{},
-    effects:{},
-    senders:{},
-    receivers:{},
-  }
-});

@@ -17,3 +17,13 @@ const app = new Vue({
     transport: Tone.Transport,
   },
 })
+
+
+Vue.prototype.$ch = new Vue({  // AUDIO BUS
+  data: {
+    sources:{},
+    effects:{},
+    senders:{},
+    receivers:{},
+  }
+});

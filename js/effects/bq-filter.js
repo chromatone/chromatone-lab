@@ -19,11 +19,11 @@ export const bqFilter = {
     }
   },
   template: `
-      <div id="autoFilter" class="row">
-        <knob :id="id" v-model="options.frequency" :signal="filter.frequency" :step="1" :min="10" :max="20000">FREQ</knob>
-        <knob :id="id" v-model="options.Q" :signal="filter.Q"  :max="30">Q</knob>
-        <choice v-model="filter.type"
-          :options="types">type</choice>
+    <div id="autoFilter" class="row">
+      <knob :id="id" v-model="options.frequency" :signal="filter.frequency" :step="1" :min="10" :max="20000">FREQ</knob>
+      <knob :id="id" v-model="options.Q" :signal="filter.Q"  :max="30">Q</knob>
+      <choice v-model="filter.type"
+        :options="types">type</choice>
     </div>
   `,
   created() {

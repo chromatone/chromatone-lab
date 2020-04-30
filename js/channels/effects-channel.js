@@ -103,7 +103,7 @@ export const effectsChannel = {
       this.$delete(this.sends,id)
     },
     createChannel(group) {
-      let channel = new Tone.Channel();      
+      let channel = new Tone.Channel();
       channel.id = this.id;
       channel.group = this.group;
       channel.title = this.title;
@@ -118,11 +118,11 @@ export const effectsChannel = {
       let send = this.sender.send(id);
       send.title = this.$ch.receivers[id].title;
       this.$set(this.sends, id, send)
-    }
+    },
   },
   beforeDestroy() {
-    this.channel.dispose()
-    this.sender.dispose()
+    this.channel.dispose();
+    this.sender.dispose();
     this.$delete(this.$ch[this.group],this.id)
     this.$delete(this.$ch.senders,this.id)
     if (this.receiver.dispose) {

@@ -1,5 +1,5 @@
 export default {
-  name:'assigner',
+  name:'knob-control',
   props: {
     value: String,
     id: String,
